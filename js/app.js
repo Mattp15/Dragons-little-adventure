@@ -45,17 +45,68 @@ const drawMap = level => {
 }
 
 const drawGooby = () => {
-    let walk = 2;
+    let walk = 1;
     animationCounter++;
     if(spaceBarPressed){
         if(lastButtonPressed === 'up'){
             ctx.drawImage(bitMap, 8, 8, 8, 8, goobyX, goobyY, 8, 8)
-        } else if(lastButtonPressed === 'right'){
+            if(currentAnimation === 0){
+            ctx.drawImage(bitMap, 48, 8, 8, 8, goobyX, (goobyY-8), 8, 8);
+            } else if(currentAnimation === 1){
+            ctx.drawImage(bitMap, 56, 8, 8, 8, goobyX, (goobyY-8), 8, 8);
+            }
+            if(animationCounter >= 6){
+                currentAnimation++;
+                animationCounter = 0;
+                if(currentAnimation > 1){
+                    currentAnimation = 0;
+                }
+            }
+        } 
+        else if(lastButtonPressed === 'right'){
             ctx.drawImage(bitMap, 16, 8, 8, 8, goobyX, goobyY, 8, 8)
-        } else if(lastButtonPressed === 'down'){
+            if(currentAnimation === 0){
+                ctx.drawImage(bitMap, 56, 0, 8, 8, goobyX + 8, goobyY, 8, 8);
+            } else if(currentAnimation === 1){
+                    ctx.drawImage(bitMap, 64, 0, 8, 8, goobyX + 8, goobyY, 8, 8);
+            }
+            if(animationCounter >= 6){
+                    currentAnimation++;
+                    animationCounter = 0;
+                if(currentAnimation > 1){
+                        currentAnimation = 0;
+                 }
+            }
+        } 
+        else if(lastButtonPressed === 'down'){
             ctx.drawImage(bitMap, 0, 8, 8, 8, goobyX, goobyY, 8, 8)
-        } else if(lastButtonPressed === 'left'){
+            if(currentAnimation === 0){
+                ctx.drawImage(bitMap, 32, 8, 8, 8, goobyX, goobyY + 8, 8, 8);
+            } else if(currentAnimation === 1){
+                    ctx.drawImage(bitMap, 40, 8, 8, 8, goobyX, goobyY + 8, 8, 8);
+            }
+            if(animationCounter >= 6){
+                    currentAnimation++;
+                    animationCounter = 0;
+                if(currentAnimation > 1){
+                        currentAnimation = 0;
+                }
+            }
+        } 
+        else if(lastButtonPressed === 'left'){
             ctx.drawImage(bitMap, 24, 8, 8, 8, goobyX, goobyY, 8, 8)
+            if(currentAnimation === 0){
+                ctx.drawImage(bitMap, 64, 8, 8, 8, goobyX-8, goobyY, 8, 8)
+            } else if(currentAnimation === 1){
+            ctx.drawImage(bitMap, 72, 8, 8, 8, goobyX-8, goobyY, 8, 8)
+            }
+            if(animationCounter >= 6){
+                currentAnimation++;
+                animationCounter = 0;
+                if(currentAnimation > 1){
+                    currentAnimation = 0;
+                }
+            }
         }
     } else if(upPressed){
         goobyY -= walk;
