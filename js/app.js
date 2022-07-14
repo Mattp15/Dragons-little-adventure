@@ -20,6 +20,8 @@ let projY = goobyY;
 let currentAnimation = 0;
 let animationCounter = 0;
 let cdTimer = 0;
+let cdDefault = 60;
+let buffs = 0;
 let fireBall = false;
 const gameObjects = [];
 const maps = [];
@@ -51,7 +53,8 @@ const drawMap = level => {
 const drawGooby = () => {
     let walk = 1;
     animationCounter++;
-    if(spaceBarPressed){//and cdTimer > number//fireBall = true;
+    cdTimer++;
+    if(spaceBarPressed && cdTimer > cdDefault-buffs){//and cdTimer > number//fireBall = true;
         if(lastButtonPressed === 'up'){
             ctx.drawImage(bitMap, 8, 8, 8, 8, goobyX, goobyY, 8, 8)
             if(currentAnimation === 0){
@@ -112,7 +115,9 @@ const drawGooby = () => {
                 }
             }
         }
-        setTimeout(() => {spaceBarPressed = false}, fps);
+        setTimeout(() => {spaceBarPressed = false;
+                          cdTimer = 0;
+                        }, fps);
     } else if(upPressed && !goobyCollision(goobyX, goobyY - walk, tileSet1)){
         goobyY -= walk;
         if(currentAnimation === 0){
@@ -241,7 +246,6 @@ const draw = () => {
     ctx.fillRect(0,0,96,96);
     drawMap(tileSet1);
     drawGooby();
-    // cdTimer++;
     requestAnimationFrame(draw);
 }
 draw();
