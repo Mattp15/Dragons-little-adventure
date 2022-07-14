@@ -63,7 +63,6 @@ const drawMap = level => {
             ctx.drawImage(bitMap, level[i][j]*8, 0, 8, 8, j*8, i*8, 8, 8);
         }
     }
-<<<<<<< HEAD
 }
 
 const drawObjects = (obj) => {
@@ -74,37 +73,21 @@ const drawObjects = (obj) => {
                 ctx.drawImage(bitMap, 48, 8, 8, 8, obj.x, obj.y, 8, 8);         
                 break;
             case 'right':
+                obj.x++;
+                ctx.drawImage(bitMap, 48, 8, 8, 8, obj.x, obj.y, 8, 8);
                 break;
             case 'down':
+                obj.y++;
+                ctx.drawImage(bitMap, 48, 8, 8, 8, obj.x, obj.y, 8, 8);
                 break;
             case 'left':
+                obj.x--;
+                ctx.drawImage(bitMap, 48, 8, 8, 8, obj.x, obj.y, 8, 8);
                 break;
         }
     }
    
 }//learn this
-=======
-// }
-// const drawObjects = (obj) => {
-//     let direction = 1;
-//     if(obj === 'isFireBall'){
-//         console.log('isfireball');
-//         switch(lastButtonPressed){
-//             case 'up':
-//                 const fireBall = new Projectile(goobyX, goobyY-8, 8, 8, true, 1);
-//                 fireBall.y - direction;
-//                 ctx.drawImage(bitMap, 48, 8, 8, 8, fireBall.x, fireBall.y, 8, 8)              
-//                 break;
-//             case 'right':
-//                 break;
-//             case 'down':
-//                 break;
-//             case 'left':
-//                 break;
-//         }
-//     }
-// }//learn this
->>>>>>> bb551564de451b2fd63407f186aa37000ecca0d6
 
 const drawGooby = () => {
     let walk = 1;
@@ -113,23 +96,28 @@ const drawGooby = () => {
     if(spaceBarPressed && cdTimer > cdDefault-buffs){//and cdTimer > number//fireBall = true;
         if(lastButtonPressed === 'up'){
             ctx.drawImage(bitMap, 8, 8, 8, 8, goobyX, goobyY, 8, 8)
-            let fireBall = new Projectile(goobyX, goobyY-8, 8, 8, true, 1, 'up');
+            let fireBall = new Projectile(goobyX, goobyY-4, 8, 8, true, 1, 'up');
             gameObject = fireBall;
             spaceBarPressed = false;
            
             } 
         else if(lastButtonPressed === 'right'){
             ctx.drawImage(bitMap, 16, 8, 8, 8, goobyX, goobyY, 8, 8)
-                // ctx.drawImage(bitMap, 56, 0, 8, 8, goobyX + 8, goobyY, 8, 8);
+            let fireBall = new Projectile(goobyX+4, goobyY, 8, 8, true, 1, 'right');
+            gameObject = fireBall;
+            spaceBarPressed = false;
         } 
         else if(lastButtonPressed === 'down'){
             ctx.drawImage(bitMap, 0, 8, 8, 8, goobyX, goobyY, 8, 8)
-            ctx.drawImage(bitMap, 32, 8, 8, 8, goobyX, goobyY + 8, 8, 8);
-                    // ctx.drawImage(bitMap, 40, 8, 8, 8, goobyX, goobyY + 8, 8, 8);
+            let fireBall = new Projectile(goobyX, goobyY+4, 8, 8, true, 1, 'down');
+            gameObject = fireBall;
+            spaceBarPressed = false;
         } 
         else if(lastButtonPressed === 'left'){
             ctx.drawImage(bitMap, 24, 8, 8, 8, goobyX, goobyY, 8, 8)
-            // ctx.drawImage(bitMap, 64, 8, 8, 8, goobyX-8, goobyY, 8, 8)
+            let fireBall = new Projectile(goobyX-4, goobyY, 8, 8, true, 1, 'left');
+            gameObject = fireBall;
+            spaceBarPressed = false;
         }
         setTimeout(() => {cdTimer = 0;
                         },1000/fps );
