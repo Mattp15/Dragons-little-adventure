@@ -24,7 +24,7 @@ let cdDefault = 60;
 let buffs = 0;
 const gameObjects = [];
 const maps = [];
-let gameMap = null;
+let gameMap = null;  
 const tileSet1 = [
     [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],//12
     [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
@@ -49,39 +49,39 @@ class DefaultObject {
     }
 }
 class Projectile extends DefaultObject{
-    constructor(x, y, width, height, isProjectile, projSpeed){
+    constructor(x, y, width, height, isProjectile, projSpeed, direction){
         super(x, y, width, height);
         this.isProjectile = isProjectile;
         this.projSpeed = projSpeed;
+        this.direction = direction;
     }
 }
-
+let gameObject = new DefaultObject(0, 0, 0, 0,);
 const drawMap = level => {
     for(let i = 0; i < level.length; i++){
         for(let j = 0; j < level[i].length; j++){
             ctx.drawImage(bitMap, level[i][j]*8, 0, 8, 8, j*8, i*8, 8, 8);
         }
     }
-// }
-// const drawObjects = (obj) => {
-//     let direction = 1;
-//     if(obj === 'isFireBall'){
-//         console.log('isfireball');
-//         switch(lastButtonPressed){
-//             case 'up':
-//                 const fireBall = new Projectile(goobyX, goobyY-8, 8, 8, true, 1);
-//                 fireBall.y - direction;
-//                 ctx.drawImage(bitMap, 48, 8, 8, 8, fireBall.x, fireBall.y, 8, 8)              
-//                 break;
-//             case 'right':
-//                 break;
-//             case 'down':
-//                 break;
-//             case 'left':
-//                 break;
-//         }
-//     }
-// }//learn this
+}
+
+const drawObjects = (obj) => {
+    if(obj.isProjectile){
+        switch(obj.direction){
+            case 'up':               
+                obj.y--;
+                ctx.drawImage(bitMap, 48, 8, 8, 8, obj.x, obj.y, 8, 8);         
+                break;
+            case 'right':
+                break;
+            case 'down':
+                break;
+            case 'left':
+                break;
+        }
+    }
+   
+}//learn this
 
 const drawGooby = () => {
     let walk = 1;
@@ -90,7 +90,10 @@ const drawGooby = () => {
     if(spaceBarPressed && cdTimer > cdDefault-buffs){//and cdTimer > number//fireBall = true;
         if(lastButtonPressed === 'up'){
             ctx.drawImage(bitMap, 8, 8, 8, 8, goobyX, goobyY, 8, 8)
-            drawObjects('isFireBall');
+            let fireBall = new Projectile(goobyX, goobyY-8, 8, 8, true, 1, 'up');
+            gameObject = fireBall;
+            spaceBarPressed = false;
+           
             } 
         else if(lastButtonPressed === 'right'){
             ctx.drawImage(bitMap, 16, 8, 8, 8, goobyX, goobyY, 8, 8)
@@ -105,9 +108,8 @@ const drawGooby = () => {
             ctx.drawImage(bitMap, 24, 8, 8, 8, goobyX, goobyY, 8, 8)
             // ctx.drawImage(bitMap, 64, 8, 8, 8, goobyX-8, goobyY, 8, 8)
         }
-        // setTimeout(() => {spaceBarPressed = false;
-        //                   cdTimer = 0;
-        //                 }, 1);
+        setTimeout(() => {cdTimer = 0;
+                        },1000/fps );
     } else if(upPressed && !goobyCollision(goobyX, goobyY - walk, tileSet1)){
         goobyY -= walk;
         if(currentAnimation === 0){
@@ -229,15 +231,16 @@ const drawGooby = () => {
             return false;
         }
 
-        
+ 
 const draw = () => {
-
+    setTimeout(()=> {
     ctx.fillStyle = "rgb(20,20,20)";
     ctx.fillRect(0,0,96,96);
     drawMap(tileSet1);
     drawGooby();
-    // drawObjects(fireBall);
+    drawObjects(gameObject);
     requestAnimationFrame(draw);
+    },1000 / fps);
 }
 draw();
 document.addEventListener("keydown", keyDownHandler, false);
