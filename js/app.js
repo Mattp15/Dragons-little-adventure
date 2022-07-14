@@ -22,7 +22,6 @@ let animationCounter = 0;
 let cdTimer = 0;
 let cdDefault = 60;
 let buffs = 0;
-let fireBall = false;
 const gameObjects = [];
 const maps = [];
 let gameMap = null;
@@ -41,6 +40,22 @@ const tileSet1 = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]//12
 ]
 
+class DefaultObject {
+    constructor(x, y, width, height){
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+    }
+}
+class Projectile extends DefaultObject{
+    constructor(x, y, width, height, isProjectile, projSpeed){
+        super(x, y, width, height);
+        this.isProjectile = isProjectile;
+        this.projSpeed = projSpeed;
+    }
+}
+const fireBall = new Projectile(goobyX, goobyY, 8, 8, true, 1);
 
 const drawMap = level => {
     for(let i = 0; i < level.length; i++){
