@@ -63,6 +63,7 @@ const drawMap = level => {
             ctx.drawImage(bitMap, level[i][j]*8, 0, 8, 8, j*8, i*8, 8, 8);
         }
     }
+<<<<<<< HEAD
 }
 
 const drawObjects = (obj) => {
@@ -82,6 +83,28 @@ const drawObjects = (obj) => {
     }
    
 }//learn this
+=======
+// }
+// const drawObjects = (obj) => {
+//     let direction = 1;
+//     if(obj === 'isFireBall'){
+//         console.log('isfireball');
+//         switch(lastButtonPressed){
+//             case 'up':
+//                 const fireBall = new Projectile(goobyX, goobyY-8, 8, 8, true, 1);
+//                 fireBall.y - direction;
+//                 ctx.drawImage(bitMap, 48, 8, 8, 8, fireBall.x, fireBall.y, 8, 8)              
+//                 break;
+//             case 'right':
+//                 break;
+//             case 'down':
+//                 break;
+//             case 'left':
+//                 break;
+//         }
+//     }
+// }//learn this
+>>>>>>> bb551564de451b2fd63407f186aa37000ecca0d6
 
 const drawGooby = () => {
     let walk = 1;
