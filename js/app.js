@@ -24,7 +24,8 @@ let cdDefault = 60;
 let buffs = 0;
 const gameObjects = [];
 const maps = [];
-let gameMap = null;  
+let gameMap = null; 
+let projectiles = []; 
 const tileSet1 = [
     [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],//12
     [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
@@ -56,7 +57,7 @@ class Projectile extends DefaultObject{
         this.direction = direction;
     }
 }
-let gameObject = new DefaultObject(0, 0, 0, 0,);
+
 const drawMap = level => {
     for(let i = 0; i < level.length; i++){
         for(let j = 0; j < level[i].length; j++){
@@ -66,29 +67,26 @@ const drawMap = level => {
 }
 
 const drawObjects = (obj) => {
-    if(obj.isProjectile){
-        switch(obj.direction){
-            case 'up':               
-                obj.y--;
-                ctx.drawImage(bitMap, 48, 8, 8, 8, obj.x, obj.y, 8, 8);         
-                break;
-            case 'right':
-                obj.x++;
-                ctx.drawImage(bitMap, 48, 8, 8, 8, obj.x, obj.y, 8, 8);
-                break;
-            case 'down':
-                obj.y++;
-                ctx.drawImage(bitMap, 48, 8, 8, 8, obj.x, obj.y, 8, 8);
-                break;
-            case 'left':
-                obj.x--;
-                ctx.drawImage(bitMap, 48, 8, 8, 8, obj.x, obj.y, 8, 8);
-                break;
+    for(let i = 0; i < obj.length; i++){
+            if(obj[i].direction === 'up' && !collision(obj[i].x, obj[i].y, tileSet1)){               
+                obj[i].y -= obj[i].projSpeed;
+                ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);         
+            }
+            if(obj[i].direction === 'right' && !collision(obj[i].x, obj[i].y, tileSet1)){
+                obj[i].x+=obj[i].projSpeed;
+                ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);
+            }
+            if(obj[i].direction === 'down' && !collision(obj[i].x, obj[i].y, tileSet1)){
+                obj[i].y += obj[i].projSpeed;
+                ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);
+            }
+            if(obj[i].direction === 'left' && !collision(obj[i].x, obj[i].y, tileSet1)){
+                obj[i].x -= obj[i].projSpeed;
+                ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);    
         }
     }
    
 }//learn this
-
 const drawGooby = () => {
     let walk = 1;
     animationCounter++;
@@ -96,32 +94,32 @@ const drawGooby = () => {
     if(spaceBarPressed && cdTimer > cdDefault-buffs){//and cdTimer > number//fireBall = true;
         if(lastButtonPressed === 'up'){
             ctx.drawImage(bitMap, 8, 8, 8, 8, goobyX, goobyY, 8, 8)
-            let fireBall = new Projectile(goobyX, goobyY-4, 8, 8, true, 1, 'up');
-            gameObject = fireBall;
+            let fireBall = new Projectile(goobyX, goobyY-4, 8, 8, true, 3, 'up');
+            projectiles.push(fireBall);
             spaceBarPressed = false;
            
             } 
         else if(lastButtonPressed === 'right'){
             ctx.drawImage(bitMap, 16, 8, 8, 8, goobyX, goobyY, 8, 8)
-            let fireBall = new Projectile(goobyX+4, goobyY, 8, 8, true, 1, 'right');
-            gameObject = fireBall;
+            let fireBall = new Projectile(goobyX+4, goobyY, 8, 8, true, 3, 'right');
+            projectiles.push(fireBall);
             spaceBarPressed = false;
         } 
         else if(lastButtonPressed === 'down'){
             ctx.drawImage(bitMap, 0, 8, 8, 8, goobyX, goobyY, 8, 8)
-            let fireBall = new Projectile(goobyX, goobyY+4, 8, 8, true, 1, 'down');
-            gameObject = fireBall;
+            let fireBall = new Projectile(goobyX, goobyY+4, 8, 8, true, 3, 'down');
+            projectiles.push(fireBall);
             spaceBarPressed = false;
         } 
         else if(lastButtonPressed === 'left'){
             ctx.drawImage(bitMap, 24, 8, 8, 8, goobyX, goobyY, 8, 8)
-            let fireBall = new Projectile(goobyX-4, goobyY, 8, 8, true, 1, 'left');
-            gameObject = fireBall;
+            let fireBall = new Projectile(goobyX-4, goobyY, 8, 8, true, 3, 'left');
+            projectiles.push(fireBall);
             spaceBarPressed = false;
         }
         setTimeout(() => {cdTimer = 0;
                         },1000/fps );
-    } else if(upPressed && !goobyCollision(goobyX, goobyY - walk, tileSet1)){
+    } else if(upPressed && !collision(goobyX, goobyY - walk, tileSet1)){
         goobyY -= walk;
         if(currentAnimation === 0){
             ctx.drawImage(gooby, 0, 0, 8, 8, goobyX, goobyY, 8, 8);
@@ -135,7 +133,7 @@ const drawGooby = () => {
                 currentAnimation = 0;
             }
         }
-    } else if(downPressed && !goobyCollision(goobyX, goobyY + walk, tileSet1)){
+    } else if(downPressed && !collision(goobyX, goobyY + walk, tileSet1)){
         goobyY += walk;
         if(currentAnimation === 0){
             ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);
@@ -149,7 +147,7 @@ const drawGooby = () => {
                 currentAnimation = 0;
             }
         }
-    } else if(rightPressed && !goobyCollision(goobyX + walk, goobyY, tileSet1)){
+    } else if(rightPressed && !collision(goobyX + walk, goobyY, tileSet1)){
         goobyX += walk;
         if(currentAnimation === 0){
             ctx.drawImage(gooby, 16, 0, 8, 8, goobyX, goobyY, 8, 8);
@@ -163,7 +161,7 @@ const drawGooby = () => {
                 currentAnimation = 0;
             }
         }
-     } else if(leftPressed && !goobyCollision(goobyX - walk, goobyY, tileSet1)){
+     } else if(leftPressed && !collision(goobyX - walk, goobyY, tileSet1)){
         goobyX -= walk;
         if(currentAnimation === 0){
             ctx.drawImage(gooby, 50, 0, 8, 8, goobyX, goobyY, 8, 8);
@@ -229,7 +227,7 @@ const drawGooby = () => {
             }
         }
 
-        const goobyCollision = (x, y, map) => {
+        const collision = (x, y, map) => {
             for(let i = 0; i < map.length; i++){
                 for(let j = 0; j < map[i].length; j++){
                     if(map[i][j] != 0){                  
@@ -249,7 +247,7 @@ const draw = () => {
     ctx.fillRect(0,0,96,96);
     drawMap(tileSet1);
     drawGooby();
-    drawObjects(gameObject);
+    drawObjects(projectiles);
     requestAnimationFrame(draw);
     },1000 / fps);
 }
