@@ -62,7 +62,7 @@ const drawMap = level => {
             ctx.drawImage(bitMap, level[i][j]*8, 0, 8, 8, j*8, i*8, 8, 8);
         }
     }
-}
+// }
 // const drawObjects = (obj) => {
 //     let direction = 1;
 //     if(obj === 'isFireBall'){
