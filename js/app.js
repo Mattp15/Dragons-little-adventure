@@ -55,7 +55,6 @@ class Projectile extends DefaultObject{
         this.projSpeed = projSpeed;
     }
 }
-const fireBall = new Projectile(goobyX, goobyY, 8, 8, true, 1);
 
 const drawMap = level => {
     for(let i = 0; i < level.length; i++){
@@ -63,7 +62,26 @@ const drawMap = level => {
             ctx.drawImage(bitMap, level[i][j]*8, 0, 8, 8, j*8, i*8, 8, 8);
         }
     }
-}
+// }
+// const drawObjects = (obj) => {
+//     let direction = 1;
+//     if(obj === 'isFireBall'){
+//         console.log('isfireball');
+//         switch(lastButtonPressed){
+//             case 'up':
+//                 const fireBall = new Projectile(goobyX, goobyY-8, 8, 8, true, 1);
+//                 fireBall.y - direction;
+//                 ctx.drawImage(bitMap, 48, 8, 8, 8, fireBall.x, fireBall.y, 8, 8)              
+//                 break;
+//             case 'right':
+//                 break;
+//             case 'down':
+//                 break;
+//             case 'left':
+//                 break;
+//         }
+//     }
+// }//learn this
 
 const drawGooby = () => {
     let walk = 1;
@@ -72,67 +90,24 @@ const drawGooby = () => {
     if(spaceBarPressed && cdTimer > cdDefault-buffs){//and cdTimer > number//fireBall = true;
         if(lastButtonPressed === 'up'){
             ctx.drawImage(bitMap, 8, 8, 8, 8, goobyX, goobyY, 8, 8)
-            if(currentAnimation === 0){
-            ctx.drawImage(bitMap, 48, 8, 8, 8, goobyX, (goobyY-8), 8, 8);
-            } else if(currentAnimation === 1){
-            ctx.drawImage(bitMap, 56, 8, 8, 8, goobyX, (goobyY-8), 8, 8);
-            }
-            if(animationCounter >= 6){
-                currentAnimation++;
-                animationCounter = 0;
-                if(currentAnimation > 1){
-                    currentAnimation = 0;
-                }
-            }
-        } 
+            drawObjects('isFireBall');
+            } 
         else if(lastButtonPressed === 'right'){
             ctx.drawImage(bitMap, 16, 8, 8, 8, goobyX, goobyY, 8, 8)
-            if(currentAnimation === 0){
-                ctx.drawImage(bitMap, 56, 0, 8, 8, goobyX + 8, goobyY, 8, 8);
-            } else if(currentAnimation === 1){
-                    ctx.drawImage(bitMap, 64, 0, 8, 8, goobyX + 8, goobyY, 8, 8);
-            }
-            if(animationCounter >= 6){
-                    currentAnimation++;
-                    animationCounter = 0;
-                if(currentAnimation > 1){
-                        currentAnimation = 0;
-                 }
-            }
+                // ctx.drawImage(bitMap, 56, 0, 8, 8, goobyX + 8, goobyY, 8, 8);
         } 
         else if(lastButtonPressed === 'down'){
             ctx.drawImage(bitMap, 0, 8, 8, 8, goobyX, goobyY, 8, 8)
-            if(currentAnimation === 0){
-                ctx.drawImage(bitMap, 32, 8, 8, 8, goobyX, goobyY + 8, 8, 8);
-            } else if(currentAnimation === 1){
-                    ctx.drawImage(bitMap, 40, 8, 8, 8, goobyX, goobyY + 8, 8, 8);
-            }
-            if(animationCounter >= 6){
-                    currentAnimation++;
-                    animationCounter = 0;
-                if(currentAnimation > 1){
-                        currentAnimation = 0;
-                }
-            }
+            ctx.drawImage(bitMap, 32, 8, 8, 8, goobyX, goobyY + 8, 8, 8);
+                    // ctx.drawImage(bitMap, 40, 8, 8, 8, goobyX, goobyY + 8, 8, 8);
         } 
         else if(lastButtonPressed === 'left'){
             ctx.drawImage(bitMap, 24, 8, 8, 8, goobyX, goobyY, 8, 8)
-            if(currentAnimation === 0){
-                ctx.drawImage(bitMap, 64, 8, 8, 8, goobyX-8, goobyY, 8, 8)
-            } else if(currentAnimation === 1){
-            ctx.drawImage(bitMap, 72, 8, 8, 8, goobyX-8, goobyY, 8, 8)
-            }
-            if(animationCounter >= 6){
-                currentAnimation++;
-                animationCounter = 0;
-                if(currentAnimation > 1){
-                    currentAnimation = 0;
-                }
-            }
+            // ctx.drawImage(bitMap, 64, 8, 8, 8, goobyX-8, goobyY, 8, 8)
         }
-        setTimeout(() => {spaceBarPressed = false;
-                          cdTimer = 0;
-                        }, fps);
+        // setTimeout(() => {spaceBarPressed = false;
+        //                   cdTimer = 0;
+        //                 }, 1);
     } else if(upPressed && !goobyCollision(goobyX, goobyY - walk, tileSet1)){
         goobyY -= walk;
         if(currentAnimation === 0){
@@ -244,8 +219,7 @@ const drawGooby = () => {
         const goobyCollision = (x, y, map) => {
             for(let i = 0; i < map.length; i++){
                 for(let j = 0; j < map[i].length; j++){
-                    if(map[i][j] != 0){
-                        console.log(x, y, "x, y");                   
+                    if(map[i][j] != 0){                  
                          if(x <= j*8+6 && x >= j*8-4 && y <= i*8+4 && y >= i*8-4){//x = 8  to 88
                             return true;
                         }
@@ -255,12 +229,14 @@ const drawGooby = () => {
             return false;
         }
 
+        
 const draw = () => {
 
     ctx.fillStyle = "rgb(20,20,20)";
     ctx.fillRect(0,0,96,96);
     drawMap(tileSet1);
     drawGooby();
+    // drawObjects(fireBall);
     requestAnimationFrame(draw);
 }
 draw();
