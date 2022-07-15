@@ -43,11 +43,21 @@ class Projectile extends DefaultObject{
     }
 }
 class Enemy extends DefaultObject{
-    constructor(x, y, width, height, mobType, firesProjectiles){
+    constructor(x, y, width, height, mobType, firesProjectiles, speed, random){
         super(x, y, width, height);
         this.mobType = mobType;
         this.fireProjectiles = firesProjectiles;
-        this.speed = 1;
+        this.speed = speed;
+        this.random = random;
+        this.animationCounter = 0;
+        this.currentAnimation = 0;
+        this.movement = 0;
+        this.previousDirection = 'up';
+    }
+    movementGenerator() {
+        setInterval(() => {
+            this.random = Math.floor(Math.random() * 4) +1;
+        }, 500 / this.speed);
     }
 }
 
@@ -72,7 +82,8 @@ const tileSet1 = [
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
 const objectsTileSet1 = [];
-tempObject = new Enemy(40, 40, 8, 8, 'blueSlime', false);
+tempObject = new Enemy(40, 40, 8, 8, 'blueSlime', false, 0.1, 2);
+tempObject.movementGenerator();
 objectsTileSet1.push(tempObject);
 
 let bundle = new MapBundler(objectsTileSet1, tileSet1);
@@ -90,10 +101,50 @@ gameObjects = gameMaps[0].gameObject;
 
 const drawEnemy = obj => {
     for(let i = 0; i < obj.length; i++){
-        console.log(obj[i].mobType);
+        obj[i].movement++;
+        console.log(obj[i].movement);
+        obj[i].animationCounter += obj[i].speed;
     if(obj[i].mobType === 'blueSlime'){
-        console.log(obj[i]);
-        ctx.drawImage(bitMap, 24, 0, 8, 8, obj[i].x, obj[i].y, 8, 8);
+        switch(obj[i].random){
+        case 1:
+            if(!collision(obj[i].x  - obj[i].speed, obj[i].y, map)){
+            obj[i].x -= obj[i].speed;
+            obj[i].previousDirection = 'left';
+            }
+            break;
+        case 2:
+            if(!collision(obj[i].x, obj[i].y - obj[i].speed, map)){
+            obj[i].y -= obj[i].speed;
+            obj[i].previousDirection = 'up';
+            }
+            break;
+        case 3:
+            if(!collision(obj[i].x  + obj[i].speed, obj[i].y, map)){
+            obj[i].x += obj[i].speed;
+            obj[i].previousDirection = 'right';
+            }
+            break;
+         case 4:
+            if(!collision(obj[i].x, obj[i].y + obj[i].speed, map)){
+            obj[i].y += obj[i].speed;
+            obj[i].previousDirection = 'down';
+            }
+            break;
+        }
+
+    
+        if(!obj[i].currentAnimation){
+        ctx.drawImage(bitMap, 25, 0, 8, 8, obj[i].x, obj[i].y, 8, 8);
+        } else if(obj[i].currentAnimation === 1){
+            ctx.drawImage(bitMap, 32, 0, 8, 8, obj[i].x, obj[i].y, 8, 8);
+        }
+        if(obj[i].animationCounter >= 6){
+            obj[i].currentAnimation++;
+            obj[i].animationCounter = 0;
+            if(obj[i].currentAnimation > 1){
+                obj[i].currentAnimation = 0;
+            }
+        }
     }
 }
 }
@@ -103,7 +154,7 @@ const drawMap = level => {
     for(let i = 0; i < level.length; i++){
         for(let j = 0; j < level[i].length; j++){
             ctx.drawImage(bitMap, level[i][j]*8, 0, 8, 8, j*8, i*8, 8, 8);
-        }
+        } 
     }
 }
 
@@ -135,31 +186,31 @@ const drawGooby = () => {
     if(spaceBarPressed && cdTimer > cdDefault-buffs){//and cdTimer > number//fireBall = true;
         if(lastButtonPressed === 'up'){
             ctx.drawImage(bitMap, 8, 8, 8, 8, goobyX, goobyY, 8, 8)
-            let fireBall = new Projectile(goobyX, goobyY-4, 8, 8, true, 3, 'up');
+            let fireBall = new Projectile(goobyX, goobyY-4, 8, 8, true, 1, 'up');
             projectiles.push(fireBall);
             spaceBarPressed = false;
            
             } 
         else if(lastButtonPressed === 'right'){
             ctx.drawImage(bitMap, 16, 8, 8, 8, goobyX, goobyY, 8, 8)
-            let fireBall = new Projectile(goobyX+4, goobyY, 8, 8, true, 3, 'right');
+            let fireBall = new Projectile(goobyX+4, goobyY, 8, 8, true, 1, 'right');
             projectiles.push(fireBall);
             spaceBarPressed = false;
         } 
         else if(lastButtonPressed === 'down'){
             ctx.drawImage(bitMap, 0, 8, 8, 8, goobyX, goobyY, 8, 8)
-            let fireBall = new Projectile(goobyX, goobyY+4, 8, 8, true, 3, 'down');
+            let fireBall = new Projectile(goobyX, goobyY+4, 8, 8, true, 1, 'down');
             projectiles.push(fireBall);
             spaceBarPressed = false;
         } 
         else if(lastButtonPressed === 'left'){
             ctx.drawImage(bitMap, 24, 8, 8, 8, goobyX, goobyY, 8, 8)
-            let fireBall = new Projectile(goobyX-4, goobyY, 8, 8, true, 3, 'left');
+            let fireBall = new Projectile(goobyX-4, goobyY, 8, 8, true, 1, 'left');
             projectiles.push(fireBall);
             spaceBarPressed = false;
         }
-        setTimeout(() => {cdTimer = 0;
-                        },1000/fps );
+        // setTimeout(() => {cdTimer = 0;
+        //                 },100/fps );
     } else if(upPressed && !collision(goobyX, goobyY - walk, tileSet1)){
         goobyY -= walk;
         if(currentAnimation === 0){
