@@ -85,8 +85,18 @@ gameMaps.push(bundle);
 
 
 let map = gameMaps[0].map;
-// gameObjects = gameMaps[1].tempObject;
-console.log(gameMaps[0].gameObject);
+gameObjects = gameMaps[0].gameObject;
+
+
+const drawEnemy = obj => {
+    for(let i = 0; i < obj.length; i++){
+        console.log(obj[i].mobType);
+    if(obj[i].mobType === 'blueSlime'){
+        console.log(obj[i]);
+        ctx.drawImage(bitMap, 24, 0, 8, 8, obj[i].x, obj[i].y, 8, 8);
+    }
+}
+}
 
 
 const drawMap = level => {
@@ -279,6 +289,7 @@ const draw = () => {
     drawMap(map);
     drawGooby();
     drawProjectiles(projectiles);
+    drawEnemy(gameObjects);
     requestAnimationFrame(draw);
     },1000 / fps);
 }
