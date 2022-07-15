@@ -22,24 +22,9 @@ let animationCounter = 0;
 let cdTimer = 0;
 let cdDefault = 60;
 let buffs = 0;
-const gameObjects = [];
-const maps = [];
-let gameMap = null; 
-let projectiles = []; 
-const tileSet1 = [
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],//12
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]//12
-]
+let gameMaps = []; 
+let projectiles = [];
+let tempObject = null; 
 
 class DefaultObject {
     constructor(x, y, width, height){
@@ -57,6 +42,52 @@ class Projectile extends DefaultObject{
         this.direction = direction;
     }
 }
+class Enemy extends DefaultObject{
+    constructor(x, y, width, height, mobType, firesProjectiles){
+        super(x, y, width, height);
+        this.mobType = mobType;
+        this.fireProjectiles = firesProjectiles;
+        this.speed = 1;
+    }
+}
+
+class MapBundler{
+    constructor(o, m){
+    this.gameObject = o;
+    this.map = m;
+}
+}
+
+const tileSet1 = [
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+const objectsTileSet1 = [];
+tempObject = new Enemy(40, 40, 8, 8, 'blueSlime', false);
+objectsTileSet1.push(tempObject);
+
+let bundle = new MapBundler(objectsTileSet1, tileSet1);
+gameMaps.push(bundle);
+ 
+
+
+
+
+
+
+let map = gameMaps[0].map;
+// gameObjects = gameMaps[1].tempObject;
+console.log(gameMaps[0].gameObject);
+
 
 const drawMap = level => {
     for(let i = 0; i < level.length; i++){
@@ -66,7 +97,7 @@ const drawMap = level => {
     }
 }
 
-const drawObjects = (obj) => {
+const drawProjectiles = (obj) => {
     for(let i = 0; i < obj.length; i++){
             if(obj[i].direction === 'up' && !collision(obj[i].x, obj[i].y, tileSet1)){               
                 obj[i].y -= obj[i].projSpeed;
@@ -245,9 +276,9 @@ const draw = () => {
     setTimeout(()=> {
     ctx.fillStyle = "rgb(20,20,20)";
     ctx.fillRect(0,0,96,96);
-    drawMap(tileSet1);
+    drawMap(map);
     drawGooby();
-    drawObjects(projectiles);
+    drawProjectiles(projectiles);
     requestAnimationFrame(draw);
     },1000 / fps);
 }
