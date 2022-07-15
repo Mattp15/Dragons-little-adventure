@@ -40,10 +40,11 @@ class Projectile extends DefaultObject{
         this.projSpeed = projSpeed;
         this.direction = direction;
         this.projectileSource = projectileSource;
+        this.damage = 1;
     }
 }
 class Enemy extends DefaultObject{
-    constructor(x, y, width, height, mobType, firesProjectiles, speed, random){
+    constructor(x, y, width, height, mobType, firesProjectiles, speed, random, health = 1){
         super(x, y, width, height);
         this.mobType = mobType;
         this.fireProjectiles = firesProjectiles;
@@ -53,6 +54,7 @@ class Enemy extends DefaultObject{
         this.currentAnimation = 0;
         this.movement = 0;
         this.previousDirection = 'up';
+        this.health = health;
     }
     movementGenerator() {
         setInterval(() => {
@@ -100,6 +102,7 @@ gameMaps.push(bundle);
 
 let map = gameMaps[0].map;
 gameObjects = gameMaps[0].gameObject;
+// console.log(gameObjects[0].x);
 
 //consider something to create an agro radius, something like monsterx - goobyx < certain number?
 //consider the logic from before, if obj[i].x > goobyX then obj[i].x - speed. Lets try to get some sort of timing to prevent a hard b-line for player on dumber mobs-possible extension goal
@@ -153,9 +156,12 @@ const drawEnemy = obj => {
             if(obj[i].currentAnimation > 1){
                 obj[i].currentAnimation = 0;
             }
+        }   
+        }
+        if(!gameObjects[i].health){
+        gameObjects.pop([i]);
         }
     }
-}
 }
 
 
@@ -172,23 +178,23 @@ const drawMap = level => {
 const drawProjectiles = (obj) => {
     for(let i = 0; i < obj.length; i++){
         if(obj[i].projectileSource === "gooby"){
-                if(obj[i].direction === 'up' && !collision(obj[i].x, obj[i].y, tileSet1)){  //add object collison conditional             
+                if(obj[i].direction === 'up' && !collision(obj[i].x, obj[i].y, tileSet1) && !objectCollision(obj[i])){  //add object collison conditional !objectCollision(obj[i], gameObjects);            
                 obj[i].y -= obj[i].projSpeed;
                 ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);         
                 }
-                if(obj[i].direction === 'right' && !collision(obj[i].x, obj[i].y, tileSet1)){
+                if(obj[i].direction === 'right' && !collision(obj[i].x, obj[i].y, tileSet1) && !objectCollision(obj[i])){
                 obj[i].x+=obj[i].projSpeed;
                 ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);
                 }
-                if(obj[i].direction === 'down' && !collision(obj[i].x, obj[i].y, tileSet1)){
+                if(obj[i].direction === 'down' && !collision(obj[i].x, obj[i].y, tileSet1) && !objectCollision(obj[i])){
                 obj[i].y += obj[i].projSpeed;
                 ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);
                 }
-                if(obj[i].direction === 'left' && !collision(obj[i].x, obj[i].y, tileSet1)){
+                if(obj[i].direction === 'left' && !collision(obj[i].x, obj[i].y, tileSet1) && !objectCollision(obj[i])){
                 obj[i].x -= obj[i].projSpeed;
                 ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);    
                 } 
-                if(collision(obj[i].x, obj[i].y, tileSet1)){
+                if(collision(obj[i].x, obj[i].y, tileSet1) || objectCollision(obj[i])){
                     obj.shift();
                 } 
             }
@@ -196,9 +202,16 @@ const drawProjectiles = (obj) => {
         }   
     }
 
-const ObjectCollision = (projectiles, monster) => {
+const objectCollision = (projectile) => {
 
-}
+        for(let i = 0; i < gameObjects.length; i++){
+            if(projectile.x >= gameObjects[i].x - 5 && projectile.x <= gameObjects[i].x + 5 && projectile.y >= gameObjects[i].y - 4 && projectile.y <= gameObjects[i].y + 5){
+                gameObjects[i].health -= projectile.damage;
+                return true;
+            }
+        }
+        return false;
+} 
 
 const drawGooby = () => {
     let walk = 1;
