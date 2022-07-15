@@ -71,8 +71,7 @@ class Text extends DefaultObject{
         super(x, y, width, height);
         this.enemy = false;
         this.text = true;
-        this.line1 = "";
-        
+        this.line = ""; 
     }
 }
 
@@ -122,7 +121,7 @@ gameObjects = gameMaps[0].gameObject;
 
 const drawEnemy = obj => {
     for(let i = 0; i < obj.length; i++){
-        if(obj[i].enemy){
+        if(obj[i].enemy && obj[i].health){
             obj[i].movement++;
             // console.log(obj[i].movement);
             obj[i].animationCounter += obj[i].speed;
@@ -171,9 +170,6 @@ const drawEnemy = obj => {
                         obj[i].currentAnimation = 0;
                     }
                
-                }
-                    if(!gameObjects[i].health){
-                gameObjects.pop([i]);
                 }
             }
         }
