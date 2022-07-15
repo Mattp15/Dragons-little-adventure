@@ -121,7 +121,7 @@ gameObjects = gameMaps[0].gameObject;
 
 const drawEnemy = obj => {
     for(let i = 0; i < obj.length; i++){
-        if(obj[i].enemy && obj[i].health){
+        if(obj[i].enemy && obj[i].health>0){
             obj[i].movement++;
             // console.log(obj[i].movement);
             obj[i].animationCounter += obj[i].speed;
@@ -219,7 +219,7 @@ const drawProjectiles = (obj) => {
 const objectCollision = (projectile) => {
 
         for(let i = 0; i < gameObjects.length; i++){
-            if(projectile.x >= gameObjects[i].x - 5 && projectile.x <= gameObjects[i].x + 5 && projectile.y >= gameObjects[i].y - 4 && projectile.y <= gameObjects[i].y + 5){
+            if(projectile.x >= gameObjects[i].x - 5 && projectile.x <= gameObjects[i].x + 5 && projectile.y >= gameObjects[i].y - 4 && projectile.y <= gameObjects[i].y + 5 && gameObjects[i].health > 0){
                 gameObjects[i].health -= projectile.damage;
                 return true;
             }
