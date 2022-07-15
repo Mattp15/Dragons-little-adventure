@@ -24,7 +24,9 @@ let cdDefault = 60;
 let buffs = 0;
 let gameMaps = []; 
 let projectiles = [];
-let tempObject = null; 
+let tempObject = null;
+let goobyEXP = 0;
+let goobyHealth = 4; 
 
 class DefaultObject {
     constructor(x, y, width, height){
@@ -44,22 +46,33 @@ class Projectile extends DefaultObject{
     }
 }
 class Enemy extends DefaultObject{
-    constructor(x, y, width, height, mobType, firesProjectiles, speed, random, health = 1){
+    constructor(x, y, width, height, mobType, speed, random, health = 1){
         super(x, y, width, height);
         this.mobType = mobType;
-        this.fireProjectiles = firesProjectiles;
         this.speed = speed;
         this.random = random;
+        this.firesProjectiles = false;
         this.animationCounter = 0;
         this.currentAnimation = 0;
         this.movement = 0;
         this.previousDirection = 'up';
         this.health = health;
+        this.enemy = true;
+        this.text = false;
     }
     movementGenerator() {
         setInterval(() => {
             this.random = Math.floor(Math.random() * 5) +1;
         }, 500 / this.speed);
+    }
+}
+class Text extends DefaultObject{
+    constructor(x, y, width, height){
+        super(x, y, width, height);
+        this.enemy = false;
+        this.text = true;
+        this.line1 = "";
+        
     }
 }
 
@@ -84,10 +97,10 @@ const tileSet1 = [
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
 const objectsTileSet1 = [];
-tempObject = new Enemy(42, 36, 8, 8, 'blueSlime', false, 0.1, 2);
+tempObject = new Enemy(42, 36, 8, 8, 'blueSlime', 0.1, 2);
 tempObject.movementGenerator();
 objectsTileSet1.push(tempObject);
-tempObject = new Enemy(18, 24, 8, 8, "blueSlime", false, 0.1, 4);
+tempObject = new Enemy(18, 24, 8, 8, "blueSlime", 0.1, 4);
 tempObject.movementGenerator();
 objectsTileSet1.push(tempObject);
 
@@ -109,61 +122,66 @@ gameObjects = gameMaps[0].gameObject;
 
 const drawEnemy = obj => {
     for(let i = 0; i < obj.length; i++){
-        obj[i].movement++;
-        // console.log(obj[i].movement);
-        obj[i].animationCounter += obj[i].speed;
-    if(obj[i].mobType === 'blueSlime'){
-        //do the if/else here for chase
-       //switch in the else{}
-        switch(obj[i].random){
-        case 1:
-            if(!collision(obj[i].x  - obj[i].speed - 2, obj[i].y, map)){
-            obj[i].x -= obj[i].speed;
-            obj[i].previousDirection = 'left';//I don't think I need this
-            }
-            break;
-        case 2:
-            if(!collision(obj[i].x, obj[i].y - obj[i].speed - 4, map)){
-            obj[i].y -= obj[i].speed;
-            obj[i].previousDirection = 'up';
-            }
-            break;
-        case 3:
-            if(!collision(obj[i].x  + obj[i].speed + 4, obj[i].y, map)){
-            obj[i].x += obj[i].speed;
-            obj[i].previousDirection = 'right';
-            }
-            break;
-         case 4:
-            if(!collision(obj[i].x, obj[i].y + obj[i].speed + 2, map)){
-            obj[i].y += obj[i].speed;
-            obj[i].previousDirection = 'down';
-            }
-            break;
-        default:
-            break;
-        }
+        if(obj[i].enemy){
+            obj[i].movement++;
+            // console.log(obj[i].movement);
+            obj[i].animationCounter += obj[i].speed;
+            if(obj[i].mobType === 'blueSlime'){
+            //do the if/else here for chase
+            //switch in the else{}
+                switch(obj[i].random){
+                case 1:
+                    if(!collision(obj[i].x  - obj[i].speed - 2, obj[i].y, map)){
+                    obj[i].x -= obj[i].speed;
+                    obj[i].previousDirection = 'left';//I don't think I need this
+                    }
+                    break;
+                case 2:
+                    if(!collision(obj[i].x, obj[i].y - obj[i].speed - 4, map)){
+                    obj[i].y -= obj[i].speed;
+                    obj[i].previousDirection = 'up';
+                    }
+                    break;
+                case 3:
+                    if(!collision(obj[i].x  + obj[i].speed + 4, obj[i].y, map)){
+                    obj[i].x += obj[i].speed;
+                    obj[i].previousDirection = 'right';
+                    }
+                    break;
+                case 4:
+                    if(!collision(obj[i].x, obj[i].y + obj[i].speed + 2, map)){
+                    obj[i].y += obj[i].speed;
+                    obj[i].previousDirection = 'down';
+                    }
+                    break;
+                default:
+                    break;
+                }
 
     
-        if(!obj[i].currentAnimation){
-        ctx.drawImage(bitMap, 25, 0, 8, 8, obj[i].x, obj[i].y, 8, 8);
-        } else if(obj[i].currentAnimation === 1){
-            ctx.drawImage(bitMap, 32, 0, 8, 8, obj[i].x, obj[i].y, 8, 8);
-        }
-        if(obj[i].animationCounter >= 6){
-            obj[i].currentAnimation++;
-            obj[i].animationCounter = 0;
-            if(obj[i].currentAnimation > 1){
-                obj[i].currentAnimation = 0;
+                if(!obj[i].currentAnimation){
+                    ctx.drawImage(bitMap, 25, 0, 8, 8, obj[i].x, obj[i].y, 8, 8);
+                } else if(obj[i].currentAnimation === 1){
+                    ctx.drawImage(bitMap, 32, 0, 8, 8, obj[i].x, obj[i].y, 8, 8);
+                }
+                if(obj[i].animationCounter >= 6){
+                    obj[i].currentAnimation++;
+                    obj[i].animationCounter = 0;
+                    if(obj[i].currentAnimation > 1){
+                        obj[i].currentAnimation = 0;
+                    }
+               
+                }
+                    if(!gameObjects[i].health){
+                gameObjects.pop([i]);
+                }
             }
-        }   
         }
-        if(!gameObjects[i].health){
-        gameObjects.pop([i]);
-        }
+        else if(obj[i].text){
+                
+            }
     }
 }
-
 
 const drawMap = level => {
     for(let i = 0; i < level.length; i++){
