@@ -70,7 +70,7 @@ class Enemy extends DefaultObject{
     }
     movementGenerator() {
         setInterval(() => {
-            this.random = Math.floor(Math.random() * 5) +1;
+            this.random = Math.floor(Math.random() * 5) +1;//redo this for sidescroll
         }, 500 / this.speed);
     }
 }
@@ -273,39 +273,39 @@ const drawGooby = () => {
         }   
         cdTimer = 0;
                     
-}
+}   
     if(spaceBarPressed && !collision(goobyX, goobyY - walk, map) && jumpTimer){
-       walk = 1.5;
-        console.log("jump");
-        setTimeout(() => {
-            jumpTimer = false;
-        }, 300)
-        setTimeout(() => {
-            jumpTimer = true;
-            spaceBarPressed = false;
-        }, 300);
+       walk = 1;
+       if(collision(goobyX, goobyY - 2, map)){
+        spaceBarPressed = false;
+       }
+    //    if(collision(goobyX, goobyY + 1, map)){
+    //     console.log(jumpTimer)
+    //     jumpTimer = true;  
+    //    } 
 
-            if(collision(goobyX + 1, goobyY, map) || collision(goobyX -1, goobyY, map)){
+        
+       if(collision(goobyX + 1, goobyY, map) || collision(goobyX -1, goobyY, map)){
                         goobyY -=walk/2;
                         ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);             
             } else if(!rightPressed && !leftPressed){
-        goobyY -= walk;
-            ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);
-        } else if(rightPressed && !leftPressed){
-        goobyY -= walk;
-        goobyX += walk/2;
-        ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY , 8, 8);
-        } else if(!rightPressed && leftPressed){
-        goobyY -= walk;
-        goobyX -= walk/2;
-        ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);;
-        }
-        
-    }   else if(!spaceBarPressed && !collision(goobyX, goobyY + walk, map)){
+                goobyY -= walk;
+                ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);
+            } else if(rightPressed && !leftPressed){
+                goobyY -= walk;
+                goobyX += walk/2;
+                ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY , 8, 8);
+            } else if(!rightPressed && leftPressed){
+                goobyY -= walk;
+                goobyX -= walk;
+                ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);;
+            }
+               
+        } else if(!spaceBarPressed && !collision(goobyX, goobyY + walk, map)){
             if(collision(goobyX + 1, goobyY, map) || collision(goobyX -1, goobyY, map)){
             goobyY +=walk/2;
             ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);             
-}
+        }
             else if(!rightPressed && !leftPressed){
             goobyY += walk;
             ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);
@@ -338,6 +338,8 @@ const drawGooby = () => {
                 currentAnimation = 0;
             }
         }
+    
+  
      } else if(leftPressed && !collision(goobyX - walk, goobyY, map) && stunTimer <= 0){
         goobyX -= walk;
         if(currentAnimation === 0){
@@ -367,6 +369,12 @@ const drawGooby = () => {
                 ctx.drawImage(gooby, 16, 0, 8, 8, goobyX, goobyY, 8, 8);
                 break;
         }
+    }
+    if(collision(goobyX, goobyY + 1, map)){
+        jumpTimer = true;
+    }
+    if(collision(goobyX, goobyY + 36, map)){
+        spaceBarPressed = false;
     }
 
 }
@@ -450,7 +458,6 @@ const drawGooby = () => {
             return false;
         }
 
- 
         setInterval(() => {
             stunTimer--;
         }, 500);
