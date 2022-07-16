@@ -77,11 +77,11 @@ class Enemy extends DefaultObject{
     }
 }
 class Text extends DefaultObject{
-    constructor(x, y, width, height){
+    constructor(x, y, width, height, line){
         super(x, y, width, height);
         this.enemy = false;
         this.text = true;
-        this.line = ""; 
+        this.line = line 
     }
 }
 class Zone extends DefaultObject{
@@ -124,7 +124,8 @@ tempObject.movementGenerator();
 objectsTileSet1.push(tempObject);
 tempObject = new Zone(76, 82, 8, 8, 0, 8, 82);
 objectsTileSet1.push(tempObject);
-
+tempObject = new Text(0, 10, 8, 8,"Test text")
+objectsTileSet1.push(tempObject);
 let bundle = new MapBundler(objectsTileSet1, tileSet1);
 gameMaps.push(bundle);
  
@@ -185,7 +186,10 @@ const drawEnemy = obj => {
             }
         }
         else if(obj[i].text){
-                
+            ctx.fillStyle = "white";
+            ctx.font = "12px Arial";
+            console.log(obj[i].line)
+            ctx.fillText(gameObjects[i].line, gameObjects[i].x, gameObjects[i].y)
             }
     }
 }
