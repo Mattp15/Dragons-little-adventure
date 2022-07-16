@@ -28,6 +28,7 @@ let tempObject = null;
 let goobyEXP = 0;
 let goobyHealth = 4; 
 let stunTimer = 0;
+let goobyRange = 25;
 
 class DefaultObject {
     constructor(x, y, width, height){
@@ -44,6 +45,7 @@ class Projectile extends DefaultObject{
         this.direction = direction;
         this.projectileSource = projectileSource;
         this.damage = 1;
+        this.distance = 0;
     }
 }
 class Enemy extends DefaultObject{
@@ -194,6 +196,7 @@ const drawMap = level => {
 
 const drawProjectiles = (obj) => {
     for(let i = 0; i < obj.length; i++){
+        obj[i].distance++;
         if(obj[i].projectileSource === "gooby"){
                 if(obj[i].direction === 'up' && !collision(obj[i].x, obj[i].y, tileSet1) && !objectCollision(obj[i])){  //add object collison conditional !objectCollision(obj[i], gameObjects);            
                 obj[i].y -= obj[i].projSpeed;
@@ -211,7 +214,7 @@ const drawProjectiles = (obj) => {
                 obj[i].x -= obj[i].projSpeed;
                 ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);    
                 } 
-                if(collision(obj[i].x, obj[i].y, tileSet1) || objectCollision(obj[i])){
+                if(collision(obj[i].x, obj[i].y, tileSet1) || objectCollision(obj[i]) || obj[i].distance >= goobyRange){
                     obj.shift();
                 } 
             }
@@ -234,7 +237,7 @@ const drawGooby = () => {
     let walk = 1;
     animationCounter++;
     cdTimer++;
-    if(spaceBarPressed && cdTimer > cdDefault-buffs){//and cdTimer > number//fireBall = true;
+    if(spaceBarPressed && cdTimer > cdDefault-buffs){
         if(lastButtonPressed === 'up'){
             ctx.drawImage(bitMap, 8, 8, 8, 8, goobyX, goobyY, 8, 8)
             let fireBall = new Projectile(goobyX, goobyY-4, 8, 8, 1, 'up', 'gooby');
@@ -260,8 +263,8 @@ const drawGooby = () => {
             projectiles.push(fireBall);
             spaceBarPressed = false;
         }
-        // setTimeout(() => {cdTimer = 0;
-        //                 },100/fps );
+        cdTimer = 0;
+                        
     } else if(upPressed && !collision(goobyX, goobyY - walk, map) && stunTimer <= 0){
         goobyY -= walk;
         if(currentAnimation === 0){
