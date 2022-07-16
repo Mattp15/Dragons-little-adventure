@@ -84,10 +84,10 @@ class Text extends DefaultObject{
     }
 }
 class Zone extends DefaultObject{
-    constructor(x, y, width, height, locationX, locationY){
+    constructor(x, y, width, height, newZoneNumber){
         super(x, y, width, height);
-        this.locationX = locationX;
-        this.locationY = locationY;
+        this.newZoneNumber = newZoneNumber;
+        this.isZone = true;
     }
 }
 
@@ -119,19 +119,16 @@ objectsTileSet1.push(tempObject);
 tempObject = new Enemy(40, 40, 8, 8, "blueSlime", 0.1, 4);
 tempObject.movementGenerator();
 objectsTileSet1.push(tempObject);
+tempObject = new Zone(88, 88, 8, 8, 2);
+objectsTileSet1.push(tempObject);
 
 let bundle = new MapBundler(objectsTileSet1, tileSet1);
 gameMaps.push(bundle);
  
-
-
-
-
-
-
+//sets starting zone
 let map = gameMaps[0].map;
 gameObjects = gameMaps[0].gameObject;
-// console.log(gameObjects[0].x);
+
 
 //consider something to create an agro radius, something like monsterx - goobyx < certain number?
 //consider the logic from before, if obj[i].x > goobyX then obj[i].x - speed. Lets try to get some sort of timing to prevent a hard b-line for player on dumber mobs-possible extension goal
@@ -204,23 +201,23 @@ const drawProjectiles = (obj) => {
     for(let i = 0; i < obj.length; i++){
         obj[i].distance++;
         if(obj[i].projectileSource === "gooby"){
-                if(obj[i].direction === 'up' && !collision(obj[i].x, obj[i].y, map) && !objectCollision(obj[i])){  //add object collison conditional !objectCollision(obj[i], gameObjects);            
+                if(obj[i].direction === 'up' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){  //add object collison conditional !projectileCollision(obj[i], gameObjects);            
                 obj[i].y -= obj[i].projSpeed;
                 ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);    //need new image     
                 }
-                if(obj[i].direction === 'right' && !collision(obj[i].x, obj[i].y, map) && !objectCollision(obj[i])){
+                if(obj[i].direction === 'right' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){
                 obj[i].x+=obj[i].projSpeed;
                 ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);//need new image
                 }
-                if(obj[i].direction === 'down' && !collision(obj[i].x, obj[i].y, map) && !objectCollision(obj[i])){
+                if(obj[i].direction === 'down' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){
                 obj[i].y += obj[i].projSpeed;
                 ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);//need new image
                 }
-                if(obj[i].direction === 'left' && !collision(obj[i].x, obj[i].y, map) && !objectCollision(obj[i])){
+                if(obj[i].direction === 'left' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){
                 obj[i].x -= obj[i].projSpeed;
                 ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);  //need new image  
                 } 
-                if(collision(obj[i].x, obj[i].y, map) || objectCollision(obj[i]) || obj[i].distance >= goobyRange){
+                if(collision(obj[i].x, obj[i].y, map) || projectileCollision(obj[i]) || obj[i].distance >= goobyRange){
                     //death image
                     obj.shift();
                 } 
@@ -229,7 +226,7 @@ const drawProjectiles = (obj) => {
         }   
     }
 
-const objectCollision = (projectile) => {
+const projectileCollision = (projectile) => {
 
         for(let i = 0; i < gameObjects.length; i++){
             if(projectile.x >= gameObjects[i].x - 5 && projectile.x <= gameObjects[i].x + 5 && projectile.y >= gameObjects[i].y - 4 && projectile.y <= gameObjects[i].y + 5 && gameObjects[i].health > 0){
@@ -240,7 +237,33 @@ const objectCollision = (projectile) => {
         return false;
 } 
 //notes for sidescroller transition > if(!spaceBarPressed && collision(x, y-1, map)) //if spacebarPressed = true && !collision(x, y -4, map) && !collision(x+1, y, map)>reduce velocity for rest of up //if !spaceBarPressed ** !collision(x, y-4, map), increase velocity, 
+const objectCollision = () => {
+                    for(let k = 0; k < gameObjects.length; k++){
+                if(goobyX >= gameObjects[k].x - 4 && goobyX <= gameObjects[k].x + 4 && goobyY >= gameObjects[k].y -4 && goobyY <= gameObjects[k].y + 4 && gameObjects[k].health > 0){
+                        // switch(lastButtonPressed){this won't work, pushes player into walls
+                        //     case 'left':
+                        //         goobyX += 4;
+                        //         break;
+                        //     case 'right':
+                        //         goobyX -= 4;
+                        //         break;
+                        //     case 'up':
+                        //         goobyY += 4;
+                        //         break;
+                        //     case 'down':
+                        //         goobyY -= 4;
+                        //         break;
+                        // }
+                    gameObjects[k].isStunned = true;
+                    setTimeout(() => {
+                        gameObjects[k].isStunned = false;
+                    }, gameObjects[k].selfStun);
+                    stunTimer = gameObjects[k].stunLength;
 
+                    return true;
+                }
+                }
+}
 
 const drawGooby = () => {
     let walk = 1;
@@ -433,33 +456,7 @@ const drawGooby = () => {
                         }
                     }                 
                 }
-            }
-                for(let k = 0; k < gameObjects.length; k++){
-                if(goobyX >= gameObjects[k].x - 4 && goobyX <= gameObjects[k].x + 4 && goobyY >= gameObjects[k].y -4 && goobyY <= gameObjects[k].y + 4 && gameObjects[k].health > 0){
-                        switch(lastButtonPressed){
-                            case 'left':
-                                goobyX += 4;
-                                break;
-                            case 'right':
-                                goobyX -= 4;
-                                break;
-                            case 'up':
-                                goobyY += 4;
-                                break;
-                            case 'down':
-                                goobyY -= 4;
-                                break;
-                        }
-                    gameObjects[k].isStunned = true;
-                    setTimeout(() => {
-                        gameObjects[k].isStunned = false;
-                    }, gameObjects[k].selfStun);
-                    stunTimer = gameObjects[k].stunLength;
-
-                    return true;
-                }
-                }
-            
+            }         
             return false;
         }
 
@@ -472,6 +469,7 @@ const draw = () => {
     ctx.fillRect(0,0,96,96);
     drawMap(map);
     drawGooby();
+    objectCollision();
     drawProjectiles(projectiles);
     drawEnemy(gameObjects);
     requestAnimationFrame(draw);
