@@ -60,7 +60,7 @@ class Enemy extends DefaultObject{
         this.animationCounter = 0;
         this.currentAnimation = 0;
         this.movement = 0;
-        this.previousDirection = 'up';
+        this.previousDirection = 'right';
         this.health = health;
         this.enemy = true;
         this.text = false;
@@ -96,7 +96,7 @@ const tileSet1 = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -130,39 +130,43 @@ gameObjects = gameMaps[0].gameObject;
 const drawEnemy = obj => {
     for(let i = 0; i < obj.length; i++){
         if(obj[i].enemy && obj[i].health>0){
-            obj[i].movement++;
             obj[i].animationCounter += obj[i].speed;
             if(obj[i].mobType === 'blueSlime'){
             //do the if/else here for chase
             //switch in the else{}
-                switch(obj[i].random){
-                case 1:
-                    if(!collision(obj[i].x  - obj[i].speed - 2, obj[i].y, map) && !obj[i].isStunned){
-                    obj[i].x -= obj[i].speed;
-                    obj[i].previousDirection = 'left';//I don't think I need this
-                    }
-                    break;
-                case 2:
-                    if(!collision(obj[i].x, obj[i].y - obj[i].speed - 4, map) && !obj[i].isStunned){
-                    obj[i].y -= obj[i].speed;
-                    obj[i].previousDirection = 'up';
-                    }
-                    break;
-                case 3:
-                    if(!collision(obj[i].x  + obj[i].speed + 4, obj[i].y, map) && !obj[i].isStunned){
-                    obj[i].x += obj[i].speed;
-                    obj[i].previousDirection = 'right';
-                    }
-                    break;
-                case 4:
-                    if(!collision(obj[i].x, obj[i].y + obj[i].speed + 2, map) && !obj[i].isStunned){
-                    obj[i].y += obj[i].speed;
-                    obj[i].previousDirection = 'down';
-                    }
-                    break;
-                default:
-                    break;
-                }
+            switch(obj[i].currentAnimation){
+                case 0:
+            if(!collision(obj[i].x, obj[i].y + 3, map)){
+                obj[i].y += obj[i].speed;
+            }
+        }
+                // switch(obj[i].random){
+                // case 1:
+                //     if(!collision(obj[i].x  - obj[i].speed - 2, obj[i].y, map) && !obj[i].isStunned){
+                //     obj[i].x -= obj[i].speed;
+                //     obj[i].previousDirection = 'left';//I don't think I need this
+                //     }
+                //     break;
+                // case 2:
+                //     if(!collision(obj[i].x, obj[i].y - obj[i].speed - 4, map) && !obj[i].isStunned){
+                //     obj[i].y -= obj[i].speed;
+                //     obj[i].previousDirection = 'up';
+                //     }
+                //     break;
+                // case 3:
+                //     if(!collision(obj[i].x  + obj[i].speed + 4, obj[i].y, map) && !obj[i].isStunned){
+                //     obj[i].x += obj[i].speed;
+                //     obj[i].previousDirection = 'right';
+                //     }
+                //     break;
+                // default:
+                //     if(!collision(obj[i].x, obj[i].y + obj[i].speed + 2, map) && !obj[i].isStunned){
+                //     obj[i].y += obj[i].speed;
+                //     obj[i].previousDirection = 'down';
+                //     }
+                //     break;
+                // }
+
 
     
                 if(!obj[i].currentAnimation){
@@ -200,23 +204,23 @@ const drawProjectiles = (obj) => {
     for(let i = 0; i < obj.length; i++){
         obj[i].distance++;
         if(obj[i].projectileSource === "gooby"){
-                if(obj[i].direction === 'up' && !collision(obj[i].x, obj[i].y, tileSet1) && !objectCollision(obj[i])){  //add object collison conditional !objectCollision(obj[i], gameObjects);            
+                if(obj[i].direction === 'up' && !collision(obj[i].x, obj[i].y, map) && !objectCollision(obj[i])){  //add object collison conditional !objectCollision(obj[i], gameObjects);            
                 obj[i].y -= obj[i].projSpeed;
                 ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);         
                 }
-                if(obj[i].direction === 'right' && !collision(obj[i].x, obj[i].y, tileSet1) && !objectCollision(obj[i])){
+                if(obj[i].direction === 'right' && !collision(obj[i].x, obj[i].y, map) && !objectCollision(obj[i])){
                 obj[i].x+=obj[i].projSpeed;
                 ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);
                 }
-                if(obj[i].direction === 'down' && !collision(obj[i].x, obj[i].y, tileSet1) && !objectCollision(obj[i])){
+                if(obj[i].direction === 'down' && !collision(obj[i].x, obj[i].y, map) && !objectCollision(obj[i])){
                 obj[i].y += obj[i].projSpeed;
                 ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);
                 }
-                if(obj[i].direction === 'left' && !collision(obj[i].x, obj[i].y, tileSet1) && !objectCollision(obj[i])){
+                if(obj[i].direction === 'left' && !collision(obj[i].x, obj[i].y, map) && !objectCollision(obj[i])){
                 obj[i].x -= obj[i].projSpeed;
                 ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);    
                 } 
-                if(collision(obj[i].x, obj[i].y, tileSet1) || objectCollision(obj[i]) || obj[i].distance >= goobyRange){
+                if(collision(obj[i].x, obj[i].y, map) || objectCollision(obj[i]) || obj[i].distance >= goobyRange){
                     obj.shift();
                 } 
             }
@@ -241,7 +245,37 @@ const drawGooby = () => {
     let walk = 1;
     animationCounter++;
     cdTimer++;
+    if(shiftPressed && cdTimer > cdDefault-buffs){
+        if(lastButtonPressed === 'up'){
+        ctx.drawImage(bitMap, 8, 8, 8, 8, goobyX, goobyY, 8, 8)
+        let fireBall = new Projectile(goobyX, goobyY-4, 8, 8, 2, 'up', 'gooby');
+        projectiles.push(fireBall);
+        shiftPressed = false;
+       
+        } 
+        else if(lastButtonPressed === 'right'){
+        ctx.drawImage(bitMap, 16, 8, 8, 8, goobyX, goobyY, 8, 8)
+        let fireBall = new Projectile(goobyX+4, goobyY, 8, 8, 2, 'right', 'gooby');
+        projectiles.push(fireBall);
+        shiftPressed = false;
+        } 
+        else if(lastButtonPressed === 'down'){
+        ctx.drawImage(bitMap, 0, 8, 8, 8, goobyX, goobyY, 8, 8)
+        let fireBall = new Projectile(goobyX, goobyY+4, 8, 8, 2, 'down', 'gooby');
+        projectiles.push(fireBall);
+        shiftPressed = false;
+        } 
+        else if(lastButtonPressed === 'left'){
+        ctx.drawImage(bitMap, 24, 8, 8, 8, goobyX, goobyY, 8, 8)
+        let fireBall = new Projectile(goobyX-4, goobyY, 8, 8, 2, 'left', 'gooby');
+        projectiles.push(fireBall);
+        shiftPressed = false;
+        }   
+        cdTimer = 0;
+                    
+}
     if(spaceBarPressed && !collision(goobyX, goobyY - walk, map) && jumpTimer){
+       walk = 1.5;
         console.log("jump");
         setTimeout(() => {
             jumpTimer = false;
@@ -250,8 +284,11 @@ const drawGooby = () => {
             jumpTimer = true;
             spaceBarPressed = false;
         }, 300);
-        walk = 2;
-            if(!rightPressed && !leftPressed){
+
+            if(collision(goobyX + 1, goobyY, map) || collision(goobyX -1, goobyY, map)){
+                        goobyY -=walk/2;
+                        ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);             
+            } else if(!rightPressed && !leftPressed){
         goobyY -= walk;
             ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);
         } else if(rightPressed && !leftPressed){
@@ -263,9 +300,13 @@ const drawGooby = () => {
         goobyX -= walk/2;
         ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);;
         }
-
-    } else if(!spaceBarPressed && !collision(goobyX, goobyY + walk, map)){
-            if(!rightPressed && !leftPressed){
+        
+    }   else if(!spaceBarPressed && !collision(goobyX, goobyY + walk, map)){
+            if(collision(goobyX + 1, goobyY, map) || collision(goobyX -1, goobyY, map)){
+            goobyY +=walk/2;
+            ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);             
+}
+            else if(!rightPressed && !leftPressed){
             goobyY += walk;
             ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);
         } else if(rightPressed && !leftPressed){
@@ -279,35 +320,7 @@ const drawGooby = () => {
             ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);
         } 
 
-    }   else if(shiftPressed && cdTimer > cdDefault-buffs){
-            if(lastButtonPressed === 'up'){
-            ctx.drawImage(bitMap, 8, 8, 8, 8, goobyX, goobyY, 8, 8)
-            let fireBall = new Projectile(goobyX, goobyY-4, 8, 8, 2, 'up', 'gooby');
-            projectiles.push(fireBall);
-            shiftPressed = false;
-           
-            } 
-            else if(lastButtonPressed === 'right'){
-            ctx.drawImage(bitMap, 16, 8, 8, 8, goobyX, goobyY, 8, 8)
-            let fireBall = new Projectile(goobyX+4, goobyY, 8, 8, 2, 'right', 'gooby');
-            projectiles.push(fireBall);
-            shiftPressed = false;
-            } 
-            else if(lastButtonPressed === 'down'){
-            ctx.drawImage(bitMap, 0, 8, 8, 8, goobyX, goobyY, 8, 8)
-            let fireBall = new Projectile(goobyX, goobyY+4, 8, 8, 2, 'down', 'gooby');
-            projectiles.push(fireBall);
-            shiftPressed = false;
-            } 
-            else if(lastButtonPressed === 'left'){
-            ctx.drawImage(bitMap, 24, 8, 8, 8, goobyX, goobyY, 8, 8)
-            let fireBall = new Projectile(goobyX-4, goobyY, 8, 8, 2, 'left', 'gooby');
-            projectiles.push(fireBall);
-            shiftPressed = false;
-            }   
-            cdTimer = 0;
-                        
-    } else if(upPressed && !collision(goobyX, goobyY - walk, map) && stunTimer <= 0){
+    }   else if(upPressed && !collision(goobyX, goobyY - walk, map) && stunTimer <= 0){
         if(currentAnimation === 0){
             //need looking up image
         }
