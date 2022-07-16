@@ -32,6 +32,7 @@ let stunTimer = 0;
 let goobyRange = 15;
 let jumpTimer = true;
 let jumpCount = 1;
+let iFrames = false;
 
 class DefaultObject {
     constructor(x, y, width, height){
@@ -84,9 +85,11 @@ class Text extends DefaultObject{
     }
 }
 class Zone extends DefaultObject{
-    constructor(x, y, width, height, newZoneNumber){
+    constructor(x, y, width, height, newZoneNumber, newZoneStartX, newZoneStartY){
         super(x, y, width, height);
         this.newZoneNumber = newZoneNumber;
+        this.newZoneStartX = newZoneStartX;
+        this.newZoneStartY = newZoneStartY;
         this.isZone = true;
     }
 }
@@ -119,7 +122,7 @@ objectsTileSet1.push(tempObject);
 tempObject = new Enemy(40, 40, 8, 8, "blueSlime", 0.1, 4);
 tempObject.movementGenerator();
 objectsTileSet1.push(tempObject);
-tempObject = new Zone(88, 88, 8, 8, 2);
+tempObject = new Zone(76, 82, 8, 8, 0, 8, 82);
 objectsTileSet1.push(tempObject);
 
 let bundle = new MapBundler(objectsTileSet1, tileSet1);
@@ -239,31 +242,31 @@ const projectileCollision = (projectile) => {
 //notes for sidescroller transition > if(!spaceBarPressed && collision(x, y-1, map)) //if spacebarPressed = true && !collision(x, y -4, map) && !collision(x+1, y, map)>reduce velocity for rest of up //if !spaceBarPressed ** !collision(x, y-4, map), increase velocity, 
 const objectCollision = () => {
                     for(let k = 0; k < gameObjects.length; k++){
+                        
                 if(goobyX >= gameObjects[k].x - 4 && goobyX <= gameObjects[k].x + 4 && goobyY >= gameObjects[k].y -4 && goobyY <= gameObjects[k].y + 4 && gameObjects[k].health > 0){
-                        // switch(lastButtonPressed){this won't work, pushes player into walls
-                        //     case 'left':
-                        //         goobyX += 4;
-                        //         break;
-                        //     case 'right':
-                        //         goobyX -= 4;
-                        //         break;
-                        //     case 'up':
-                        //         goobyY += 4;
-                        //         break;
-                        //     case 'down':
-                        //         goobyY -= 4;
-                        //         break;
-                        // }
+                    if(gameObjects[k].enemy && !iFrames){
+                        iFrames = true;
+                        setTimeout(() => {
+                            iFrames = false;
+                        },gameObjects[k].stunLength + 3000);
                     gameObjects[k].isStunned = true;
                     setTimeout(() => {
                         gameObjects[k].isStunned = false;
                     }, gameObjects[k].selfStun);
                     stunTimer = gameObjects[k].stunLength;
-
-                    return true;
+                    }
                 }
+                if(gameObjects[k].isZone){
+                    if(goobyX >= gameObjects[k].x  && goobyX <= gameObjects[k].x + gameObjects[k].width && goobyY >= gameObjects[k].y  && goobyY <= gameObjects[k].y + + gameObjects[k].height){
+                    goobyX = gameObjects[k].newZoneStartX;
+                    goobyY = gameObjects[k].newZoneStartY;
+                    map = gameMaps[gameObjects[k].newZoneNumber].map;
+                    gameObjects = gameMaps[gameObjects[k].newZoneNumber].gameObject;
+                    }
                 }
-}
+            }
+        }
+    
 
 const drawGooby = () => {
     let walk = 1;
@@ -298,7 +301,7 @@ const drawGooby = () => {
         cdTimer = 0;
                     
 }   
-    if(spaceBarPressed && !collision(goobyX, goobyY - walk, map) && jumpTimer){
+    if(spaceBarPressed && !collision(goobyX, goobyY - walk, map) && jumpTimer && stunTimer <= 0){
        walk = 1;
        if(collision(goobyX, goobyY - 2, map)){
         spaceBarPressed = false;
