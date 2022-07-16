@@ -83,6 +83,13 @@ class Text extends DefaultObject{
         this.line = ""; 
     }
 }
+class Zone extends DefaultObject{
+    constructor(x, y, width, height, locationX, locationY){
+        super(x, y, width, height);
+        this.locationX = locationX;
+        this.locationY = locationY;
+    }
+}
 
 class MapBundler{
     constructor(o, m){
@@ -90,6 +97,7 @@ class MapBundler{
     this.map = m;
 }
 }
+
 
 const tileSet1 = [
     [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
