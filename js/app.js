@@ -27,6 +27,7 @@ let projectiles = [];
 let tempObject = null;
 let goobyEXP = 0;
 let goobyHealth = 4; 
+let stunTimer = 0;
 
 class DefaultObject {
     constructor(x, y, width, height){
@@ -59,6 +60,9 @@ class Enemy extends DefaultObject{
         this.health = health;
         this.enemy = true;
         this.text = false;
+        this.stunLength = 1.5;
+        this.isStunned = false;
+        this.selfStun = 2000;
     }
     movementGenerator() {
         setInterval(() => {
@@ -123,32 +127,31 @@ const drawEnemy = obj => {
     for(let i = 0; i < obj.length; i++){
         if(obj[i].enemy && obj[i].health>0){
             obj[i].movement++;
-            // console.log(obj[i].movement);
             obj[i].animationCounter += obj[i].speed;
             if(obj[i].mobType === 'blueSlime'){
             //do the if/else here for chase
             //switch in the else{}
                 switch(obj[i].random){
                 case 1:
-                    if(!collision(obj[i].x  - obj[i].speed - 2, obj[i].y, map)){
+                    if(!collision(obj[i].x  - obj[i].speed - 2, obj[i].y, map) && !obj[i].isStunned){
                     obj[i].x -= obj[i].speed;
                     obj[i].previousDirection = 'left';//I don't think I need this
                     }
                     break;
                 case 2:
-                    if(!collision(obj[i].x, obj[i].y - obj[i].speed - 4, map)){
+                    if(!collision(obj[i].x, obj[i].y - obj[i].speed - 4, map) && !obj[i].isStunned){
                     obj[i].y -= obj[i].speed;
                     obj[i].previousDirection = 'up';
                     }
                     break;
                 case 3:
-                    if(!collision(obj[i].x  + obj[i].speed + 4, obj[i].y, map)){
+                    if(!collision(obj[i].x  + obj[i].speed + 4, obj[i].y, map) && !obj[i].isStunned){
                     obj[i].x += obj[i].speed;
                     obj[i].previousDirection = 'right';
                     }
                     break;
                 case 4:
-                    if(!collision(obj[i].x, obj[i].y + obj[i].speed + 2, map)){
+                    if(!collision(obj[i].x, obj[i].y + obj[i].speed + 2, map) && !obj[i].isStunned){
                     obj[i].y += obj[i].speed;
                     obj[i].previousDirection = 'down';
                     }
@@ -259,7 +262,7 @@ const drawGooby = () => {
         }
         // setTimeout(() => {cdTimer = 0;
         //                 },100/fps );
-    } else if(upPressed && !collision(goobyX, goobyY - walk, map)){
+    } else if(upPressed && !collision(goobyX, goobyY - walk, map) && stunTimer <= 0){
         goobyY -= walk;
         if(currentAnimation === 0){
             ctx.drawImage(gooby, 0, 0, 8, 8, goobyX, goobyY, 8, 8);
@@ -273,7 +276,7 @@ const drawGooby = () => {
                 currentAnimation = 0;
             }
         }
-    } else if(downPressed && !collision(goobyX, goobyY + walk, map)){
+    } else if(downPressed && !collision(goobyX, goobyY + walk, map) && stunTimer <= 0){
         goobyY += walk;
         if(currentAnimation === 0){
             ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);
@@ -287,7 +290,7 @@ const drawGooby = () => {
                 currentAnimation = 0;
             }
         }
-    } else if(rightPressed && !collision(goobyX + walk, goobyY, map)){
+    } else if(rightPressed && !collision(goobyX + walk, goobyY, map) && stunTimer <= 0){
         goobyX += walk;
         if(currentAnimation === 0){
             ctx.drawImage(gooby, 16, 0, 8, 8, goobyX, goobyY, 8, 8);
@@ -301,7 +304,7 @@ const drawGooby = () => {
                 currentAnimation = 0;
             }
         }
-     } else if(leftPressed && !collision(goobyX - walk, goobyY, map)){
+     } else if(leftPressed && !collision(goobyX - walk, goobyY, map) && stunTimer <= 0){
         goobyX -= walk;
         if(currentAnimation === 0){
             ctx.drawImage(gooby, 50, 0, 8, 8, goobyX, goobyY, 8, 8);
@@ -370,17 +373,47 @@ const drawGooby = () => {
         const collision = (x, y, map) => {
             for(let i = 0; i < map.length; i++){
                 for(let j = 0; j < map[i].length; j++){
+                    
                     if(map[i][j] != 0){                  
                          if(x <= j*8+6 && x >= j*8-4 && y <= i*8+4 && y >= i*8-4){//x = 8  to 88
                             return true;
                         }
-                    }
+                    }                 
                 }
             }
+                for(let k = 0; k < gameObjects.length; k++){
+                if(goobyX >= gameObjects[k].x - 4 && goobyX <= gameObjects[k].x + 4 && goobyY >= gameObjects[k].y -4 && goobyY <= gameObjects[k].y + 4 && gameObjects[k].health > 0){
+                        switch(lastButtonPressed){
+                            case 'left':
+                                goobyX += 4;
+                                break;
+                            case 'right':
+                                goobyX -= 4;
+                                break;
+                            case 'up':
+                                goobyY += 4;
+                                break;
+                            case 'down':
+                                goobyY -= 4;
+                                break;
+                        }
+                    gameObjects[k].isStunned = true;
+                    setTimeout(() => {
+                        gameObjects[k].isStunned = false;
+                    }, gameObjects[k].selfStun);
+                    stunTimer = gameObjects[k].stunLength;
+
+                    return true;
+                }
+                }
+            
             return false;
         }
 
  
+        setInterval(() => {
+            stunTimer--;
+        }, 500);
 const draw = () => {
     setTimeout(()=> {
     ctx.fillStyle = "rgb(20,20,20)";
