@@ -33,6 +33,7 @@ let goobyRange = 15;
 let jumpTimer = true;
 let jumpCount = 1;
 let iFrames = false;
+const textArray = [];
 
 class DefaultObject {
     constructor(x, y, width, height){
@@ -53,7 +54,7 @@ class Projectile extends DefaultObject{
     }
 }
 class Enemy extends DefaultObject{
-    constructor(x, y, width, height, mobType, speed, random, health = 1){
+    constructor(x, y, width, height, mobType, speed, random, health = 1, expValue = 1){
         super(x, y, width, height);
         this.mobType = mobType;
         this.speed = speed;
@@ -64,6 +65,7 @@ class Enemy extends DefaultObject{
         this.movement = 0;
         this.previousDirection = 'right';
         this.health = health;
+        this.expValue = expValue;
         this.enemy = true;
         this.text = false;
         this.stunLength = 1.5;
@@ -101,7 +103,9 @@ class MapBundler{
 }
 }
 
-
+const scoreText = new Text(0, 10, 0, 0, "SCORE:");
+textArray.push(scoreText);
+////////////////////////////////////////////////////////////////zone1
 const tileSet1 = [
     [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
     [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
@@ -124,11 +128,11 @@ tempObject.movementGenerator();
 objectsTileSet1.push(tempObject);
 tempObject = new Zone(76, 82, 8, 8, 0, 8, 82);
 objectsTileSet1.push(tempObject);
-tempObject = new Text(0, 10, 8, 8,"Test text")
+tempObject = new Zone(76, 82, 8, 8, 0, 8, 82);
 objectsTileSet1.push(tempObject);
 let bundle = new MapBundler(objectsTileSet1, tileSet1);
 gameMaps.push(bundle);
- 
+ //////////////////////////////////////////////////////////zone 1
 //sets starting zone
 let map = gameMaps[0].map;
 gameObjects = gameMaps[0].gameObject;
@@ -185,11 +189,15 @@ const drawEnemy = obj => {
                 }
             }
         }
-        else if(obj[i].text){
+    }
+}
+const drawText = texts => {
+    for(let i = 0; i < texts.length; i++){
+        if(texts[i].text){
             ctx.fillStyle = "white";
             ctx.font = "12px Arial";
-            console.log(obj[i].line)
-            ctx.fillText(gameObjects[i].line, gameObjects[i].x, gameObjects[i].y)
+            ctx.fillText(texts[i].line + goobyEXP, texts[i].x, texts[i].y)
+            console.log("drawing text")
             }
     }
 }
@@ -225,7 +233,6 @@ const drawProjectiles = (obj) => {
                 ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);  //need new image  
                 } 
                 if(collision(obj[i].x, obj[i].y, map) || projectileCollision(obj[i]) || obj[i].distance >= goobyRange){
-                    //death image
                     obj.shift();
                 } 
             }
@@ -238,6 +245,10 @@ const projectileCollision = (projectile) => {
         for(let i = 0; i < gameObjects.length; i++){
             if(projectile.x >= gameObjects[i].x - 5 && projectile.x <= gameObjects[i].x + 5 && projectile.y >= gameObjects[i].y - 4 && projectile.y <= gameObjects[i].y + 5 && gameObjects[i].health > 0){
                 gameObjects[i].health -= projectile.damage;
+                console.log(gameObjects[i].health);
+                if(!gameObjects[i].health){
+                    goobyEXP+= gameObjects[i].expValue;
+                }
                 return true;
             }
         }
@@ -334,14 +345,13 @@ const drawGooby = () => {
             ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);//need new image
         }
                
-        } else if(!spaceBarPressed && !collision(goobyX, goobyY + walk, map)){
+        } else if(!spaceBarPressed && !collision(goobyX, goobyY + 1, map)){
         //     if(collision(goobyX + 1, goobyY, map) || collision(goobyX -1, goobyY, map)){
         //     goobyY +=walk/2;
         //     ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);             
         // }
             if(!rightPressed && !leftPressed){
             goobyY += walk;
-            ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);//need new image
         } else if(rightPressed && !collision(goobyX + 1, goobyY, map)){
 
             goobyY += walk;
@@ -352,12 +362,12 @@ const drawGooby = () => {
             goobyX -= walk/2;
             ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);//need new image
         } 
-
     }   else if(upPressed && !collision(goobyX, goobyY - walk, map) && stunTimer <= 0){
         if(currentAnimation === 0){
             //need looking up image
         }
-    }  else if(rightPressed && !collision(goobyX + walk, goobyY, map) && stunTimer <= 0){
+    }  else if(rightPressed){
+        if(!collision(goobyX + walk, goobyY, map) && stunTimer <= 0){
         goobyX += walk;
         if(currentAnimation === 0){
             ctx.drawImage(gooby, 16, 0, 8, 8, goobyX, goobyY, 8, 8);//need new image
@@ -371,47 +381,79 @@ const drawGooby = () => {
                 currentAnimation = 0;
             }
         }
-    
-  
-     } else if(leftPressed && !collision(goobyX - walk, goobyY, map) && stunTimer <= 0){
-        goobyX -= walk;
-        if(currentAnimation === 0){
-            ctx.drawImage(gooby, 50, 0, 8, 8, goobyX, goobyY, 8, 8);//need new image
-        }else if(currentAnimation === 1){
-            ctx.drawImage(gooby, 58, 0, 8, 8, goobyX, goobyY, 8, 8);//need new image
         }
-        if(animationCounter >= 6){
-            currentAnimation++;
-            animationCounter = 0;
-            if(currentAnimation > 1){
-                currentAnimation = 0;
+        else{
+            if(currentAnimation === 0){
+                ctx.drawImage(gooby, 16, 0, 8, 8, goobyX, goobyY, 8, 8);//need new image
+            }else if(currentAnimation === 1){
+                ctx.drawImage(gooby, 22, 0, 8, 8, goobyX, goobyY, 8, 8);//newed new image
+            }
+            if(animationCounter >= 6){
+                currentAnimation++;
+                animationCounter = 0;
+                if(currentAnimation > 1){
+                    currentAnimation = 0;
+                }
             }
         }
-    }
+     } else if(leftPressed){
+          if(!collision(goobyX - walk, goobyY, map) && stunTimer <= 0){
+            goobyX -= walk;
+            if(currentAnimation === 0){
+            ctx.drawImage(gooby, 50, 0, 8, 8, goobyX, goobyY, 8, 8);//need new image
+            }else if(currentAnimation === 1){
+            ctx.drawImage(gooby, 58, 0, 8, 8, goobyX, goobyY, 8, 8);//need new image
+            }
+            if(animationCounter >= 6){
+                currentAnimation++;
+                animationCounter = 0;
+                if(currentAnimation > 1){
+                    currentAnimation = 0;
+                }
+            }
+        }   
+        else{
+            if(currentAnimation === 0){
+                ctx.drawImage(gooby, 50, 0, 8, 8, goobyX, goobyY, 8, 8);//need new image
+                }else if(currentAnimation === 1){
+                ctx.drawImage(gooby, 58, 0, 8, 8, goobyX, goobyY, 8, 8);//need new image
+                }
+                if(animationCounter >= 6){
+                    currentAnimation++;
+                    animationCounter = 0;
+                    if(currentAnimation > 1){
+                        currentAnimation = 0;
+                    }
+                }
+        }
+    
+    }   
     if(leftPressed && collision(goobyX - walk, goobyY, map) && !collision(goobyX, goobyY + 1, map)){
         if(!spaceBarPressed) {
             
             goobyY += 1;
             ctx.drawImage(gooby, 58, 0, 8, 8, goobyX, goobyY, 8, 8);
         }
-        }  if(rightPressed && collision(goobyX + walk, goobyY, map) && !collision(goobyX, goobyY + 1, map)){
+        }  if(rightPressed && collision(goobyX + 1, goobyY, map) && !collision(goobyX, goobyY + 1, map)){
 
-        if(!spaceBarPressed) {
-            
+            if(!spaceBarPressed) {
             goobyY += 1;
             ctx.drawImage(gooby, 58, 0, 8, 8, goobyX, goobyY, 8, 8);
             }
+
         }
-         else if(collision(goobyX, goobyY + 1, map)){
+        else if(!rightPressed && !leftPressed && !spaceBarPressed && !upPressed && !downPressed){
             ctx.drawImage(gooby, 58, 0, 8, 8, goobyX, goobyY, 8, 8);
         }
-    if(collision(goobyX, goobyY + 1, map)){
+     
+    if(collision(goobyX, goobyY + 1.5, map)){
         jumpTimer = true;
         jumpCount = 1;
     }
-
-
 }
+
+
+
 
 
 
@@ -479,6 +521,7 @@ const draw = () => {
     objectCollision();
     drawProjectiles(projectiles);
     drawEnemy(gameObjects);
+    drawText(textArray);
     requestAnimationFrame(draw);
     },1000 / fps);
 }
