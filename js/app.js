@@ -96,12 +96,12 @@ const tileSet1 = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1],
+    [1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
 const objectsTileSet1 = [];
 tempObject = new Enemy(42, 36, 8, 8, 'blueSlime', 0.1, 2);
@@ -251,55 +251,61 @@ const drawGooby = () => {
             spaceBarPressed = false;
         }, 300);
         walk = 2;
-        if(!rightPressed && !leftPressed){
+            if(!rightPressed && !leftPressed){
         goobyY -= walk;
-            ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY - walk, 8, 8);
-    }   else if(rightPressed && !leftPressed){
+            ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);
+        } else if(rightPressed && !leftPressed){
         goobyY -= walk;
         goobyX += walk/2;
-        ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY - walk, 8, 8);
-    }   else if(!rightPressed && leftPressed){
+        ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY , 8, 8);
+        } else if(!rightPressed && leftPressed){
         goobyY -= walk;
         goobyX -= walk/2;
-        ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY - walk, 8, 8);;
-    }
-
-    }
-         else if(!spaceBarPressed && !collision(goobyX, goobyY + walk, map)){
-        if(downPressed){
-            walk = 2;
+        ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);;
         }
+
+    } else if(!spaceBarPressed && !collision(goobyX, goobyY + walk, map)){
+            if(!rightPressed && !leftPressed){
             goobyY += walk;
             ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);
+        } else if(rightPressed && !leftPressed){
 
-    }   
-       else if(shiftPressed && cdTimer > cdDefault-buffs){
-        if(lastButtonPressed === 'up'){
+            goobyY += walk;
+            goobyX += walk/2;
+            ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);
+        } else if(!rightPressed && leftPressed){
+            goobyY += walk;
+            goobyX -= walk/2;
+            ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);
+        } 
+
+    }   else if(shiftPressed && cdTimer > cdDefault-buffs){
+            if(lastButtonPressed === 'up'){
             ctx.drawImage(bitMap, 8, 8, 8, 8, goobyX, goobyY, 8, 8)
             let fireBall = new Projectile(goobyX, goobyY-4, 8, 8, 2, 'up', 'gooby');
             projectiles.push(fireBall);
             shiftPressed = false;
            
             } 
-        else if(lastButtonPressed === 'right'){
+            else if(lastButtonPressed === 'right'){
             ctx.drawImage(bitMap, 16, 8, 8, 8, goobyX, goobyY, 8, 8)
             let fireBall = new Projectile(goobyX+4, goobyY, 8, 8, 2, 'right', 'gooby');
             projectiles.push(fireBall);
             shiftPressed = false;
-        } 
-        else if(lastButtonPressed === 'down'){
+            } 
+            else if(lastButtonPressed === 'down'){
             ctx.drawImage(bitMap, 0, 8, 8, 8, goobyX, goobyY, 8, 8)
             let fireBall = new Projectile(goobyX, goobyY+4, 8, 8, 2, 'down', 'gooby');
             projectiles.push(fireBall);
             shiftPressed = false;
-        } 
-        else if(lastButtonPressed === 'left'){
+            } 
+            else if(lastButtonPressed === 'left'){
             ctx.drawImage(bitMap, 24, 8, 8, 8, goobyX, goobyY, 8, 8)
             let fireBall = new Projectile(goobyX-4, goobyY, 8, 8, 2, 'left', 'gooby');
             projectiles.push(fireBall);
             shiftPressed = false;
-        }
-        cdTimer = 0;
+            }   
+            cdTimer = 0;
                         
     } else if(upPressed && !collision(goobyX, goobyY - walk, map) && stunTimer <= 0){
         if(currentAnimation === 0){
