@@ -232,7 +232,7 @@ const objectCollision = (projectile) => {
         }
         return false;
 } 
-
+//notes for sidescroller transition > if(!spaceBarPressed && collision(x, y-1, map)) //if spacebarPressed = true && !collision(x, y -4, map) && !collision(x+1, y, map)>reduce velocity for rest of up //if !spaceBarPressed ** !collision(x, y-4, map), increase velocity, 
 const drawGooby = () => {
     let walk = 1;
     animationCounter++;
