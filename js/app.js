@@ -21,7 +21,7 @@ let projY = goobyY;
 let currentAnimation = 0;
 let animationCounter = 0;
 let cdTimer = 0;
-let cdDefault = 60;
+let cdDefault = 30;
 let buffs = 0;
 let gameMaps = []; 
 let projectiles = [];
@@ -31,6 +31,7 @@ let goobyHealth = 4;
 let stunTimer = 0;
 let goobyRange = 15;
 let jumpTimer = true;
+let jumpCount = 1;
 
 class DefaultObject {
     constructor(x, y, width, height){
@@ -279,12 +280,13 @@ const drawGooby = () => {
        if(collision(goobyX, goobyY - 2, map)){
         spaceBarPressed = false;
        }
-    //    if(collision(goobyX, goobyY + 1, map)){
-    //     console.log(jumpTimer)
-    //     jumpTimer = true;  
-    //    } 
+       else{
+        setTimeout(() => {
+            spaceBarPressed = false;
+        }, 400)
+       }
 
-        
+            
        if(collision(goobyX + 1, goobyY, map) || collision(goobyX -1, goobyY, map)){
                         goobyY -=walk/2;
                         ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);             
@@ -371,11 +373,11 @@ const drawGooby = () => {
         }
     }
     if(collision(goobyX, goobyY + 1, map)){
+        console.log('jumpreset');
         jumpTimer = true;
+        jumpCount = 1;
     }
-    if(collision(goobyX, goobyY + 36, map)){
-        spaceBarPressed = false;
-    }
+
 
 }
 
@@ -395,7 +397,8 @@ const drawGooby = () => {
             } else if(e.keyCode === 83){//down
                 downPressed = true;
                 lastButtonPressed = "down";
-            } else if(e.keyCode === 32){//spacebar
+            } else if(e.keyCode === 32 && jumpCount){//spacebar
+                jumpCount = 0;
                 spaceBarPressed = true;
             } else if(e.keyCode === 16){//leftshift
                 shiftPressed = true;
