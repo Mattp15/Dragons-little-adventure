@@ -28,7 +28,7 @@ let tempObject = null;
 let goobyEXP = 0;
 let goobyHealth = 4; 
 let stunTimer = 0;
-let goobyRange = 25;
+let goobyRange = 15;
 
 class DefaultObject {
     constructor(x, y, width, height){
@@ -240,26 +240,26 @@ const drawGooby = () => {
     if(spaceBarPressed && cdTimer > cdDefault-buffs){
         if(lastButtonPressed === 'up'){
             ctx.drawImage(bitMap, 8, 8, 8, 8, goobyX, goobyY, 8, 8)
-            let fireBall = new Projectile(goobyX, goobyY-4, 8, 8, 1, 'up', 'gooby');
+            let fireBall = new Projectile(goobyX, goobyY-4, 8, 8, 2, 'up', 'gooby');
             projectiles.push(fireBall);
             spaceBarPressed = false;
            
             } 
         else if(lastButtonPressed === 'right'){
             ctx.drawImage(bitMap, 16, 8, 8, 8, goobyX, goobyY, 8, 8)
-            let fireBall = new Projectile(goobyX+4, goobyY, 8, 8,1, 'right', 'gooby');
+            let fireBall = new Projectile(goobyX+4, goobyY, 8, 8, 2, 'right', 'gooby');
             projectiles.push(fireBall);
             spaceBarPressed = false;
         } 
         else if(lastButtonPressed === 'down'){
             ctx.drawImage(bitMap, 0, 8, 8, 8, goobyX, goobyY, 8, 8)
-            let fireBall = new Projectile(goobyX, goobyY+4, 8, 8,1, 'down', 'gooby');
+            let fireBall = new Projectile(goobyX, goobyY+4, 8, 8, 2, 'down', 'gooby');
             projectiles.push(fireBall);
             spaceBarPressed = false;
         } 
         else if(lastButtonPressed === 'left'){
             ctx.drawImage(bitMap, 24, 8, 8, 8, goobyX, goobyY, 8, 8)
-            let fireBall = new Projectile(goobyX-4, goobyY, 8, 8, 1, 'left', 'gooby');
+            let fireBall = new Projectile(goobyX-4, goobyY, 8, 8, 2, 'left', 'gooby');
             projectiles.push(fireBall);
             spaceBarPressed = false;
         }
