@@ -13,6 +13,7 @@ let leftPressed = false;
 let upPressed = false;
 let lastButtonPressed = 'up';
 let spaceBarPressed = false;
+let shiftPressed = false;
 let goobyX = 8;
 let goobyY = 40;
 let projX = goobyX;
@@ -233,53 +234,16 @@ const objectCollision = (projectile) => {
         return false;
 } 
 //notes for sidescroller transition > if(!spaceBarPressed && collision(x, y-1, map)) //if spacebarPressed = true && !collision(x, y -4, map) && !collision(x+1, y, map)>reduce velocity for rest of up //if !spaceBarPressed ** !collision(x, y-4, map), increase velocity, 
+
+
 const drawGooby = () => {
     let walk = 1;
     animationCounter++;
     cdTimer++;
-    if(spaceBarPressed && cdTimer > cdDefault-buffs){
-        if(lastButtonPressed === 'up'){
-            ctx.drawImage(bitMap, 8, 8, 8, 8, goobyX, goobyY, 8, 8)
-            let fireBall = new Projectile(goobyX, goobyY-4, 8, 8, 2, 'up', 'gooby');
-            projectiles.push(fireBall);
-            spaceBarPressed = false;
-           
-            } 
-        else if(lastButtonPressed === 'right'){
-            ctx.drawImage(bitMap, 16, 8, 8, 8, goobyX, goobyY, 8, 8)
-            let fireBall = new Projectile(goobyX+4, goobyY, 8, 8, 2, 'right', 'gooby');
-            projectiles.push(fireBall);
-            spaceBarPressed = false;
-        } 
-        else if(lastButtonPressed === 'down'){
-            ctx.drawImage(bitMap, 0, 8, 8, 8, goobyX, goobyY, 8, 8)
-            let fireBall = new Projectile(goobyX, goobyY+4, 8, 8, 2, 'down', 'gooby');
-            projectiles.push(fireBall);
-            spaceBarPressed = false;
-        } 
-        else if(lastButtonPressed === 'left'){
-            ctx.drawImage(bitMap, 24, 8, 8, 8, goobyX, goobyY, 8, 8)
-            let fireBall = new Projectile(goobyX-4, goobyY, 8, 8, 2, 'left', 'gooby');
-            projectiles.push(fireBall);
-            spaceBarPressed = false;
+    if(!spaceBarPressed && !collision(goobyX, goobyY + walk, map)){
+        if(downPressed){
+            walk++;
         }
-        cdTimer = 0;
-                        
-    } else if(upPressed && !collision(goobyX, goobyY - walk, map) && stunTimer <= 0){
-        goobyY -= walk;
-        if(currentAnimation === 0){
-            ctx.drawImage(gooby, 0, 0, 8, 8, goobyX, goobyY, 8, 8);
-        } else if(currentAnimation === 1){
-            ctx.drawImage(gooby, 8, 0, 8, 8, goobyX, goobyY, 8, 8);
-        }
-        if(animationCounter >= 6){
-            currentAnimation++;
-            animationCounter = 0;
-            if(currentAnimation > 1){
-                currentAnimation = 0;
-            }
-        }
-    } else if(downPressed && !collision(goobyX, goobyY + walk, map) && stunTimer <= 0){
         goobyY += walk;
         if(currentAnimation === 0){
             ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);
@@ -293,7 +257,39 @@ const drawGooby = () => {
                 currentAnimation = 0;
             }
         }
-    } else if(rightPressed && !collision(goobyX + walk, goobyY, map) && stunTimer <= 0){
+    }   else if(shiftPressed && cdTimer > cdDefault-buffs){
+        if(lastButtonPressed === 'up'){
+            ctx.drawImage(bitMap, 8, 8, 8, 8, goobyX, goobyY, 8, 8)
+            let fireBall = new Projectile(goobyX, goobyY-4, 8, 8, 2, 'up', 'gooby');
+            projectiles.push(fireBall);
+            shiftPressed = false;
+           
+            } 
+        else if(lastButtonPressed === 'right'){
+            ctx.drawImage(bitMap, 16, 8, 8, 8, goobyX, goobyY, 8, 8)
+            let fireBall = new Projectile(goobyX+4, goobyY, 8, 8, 2, 'right', 'gooby');
+            projectiles.push(fireBall);
+            shiftPressed = false;
+        } 
+        else if(lastButtonPressed === 'down'){
+            ctx.drawImage(bitMap, 0, 8, 8, 8, goobyX, goobyY, 8, 8)
+            let fireBall = new Projectile(goobyX, goobyY+4, 8, 8, 2, 'down', 'gooby');
+            projectiles.push(fireBall);
+            shiftPressed = false;
+        } 
+        else if(lastButtonPressed === 'left'){
+            ctx.drawImage(bitMap, 24, 8, 8, 8, goobyX, goobyY, 8, 8)
+            let fireBall = new Projectile(goobyX-4, goobyY, 8, 8, 2, 'left', 'gooby');
+            projectiles.push(fireBall);
+            shiftPressed = false;
+        }
+        cdTimer = 0;
+                        
+    } else if(upPressed && !collision(goobyX, goobyY - walk, map) && stunTimer <= 0){
+        if(currentAnimation === 0){
+            //need looking up image
+        }
+    }  else if(rightPressed && !collision(goobyX + walk, goobyY, map) && stunTimer <= 0){
         goobyX += walk;
         if(currentAnimation === 0){
             ctx.drawImage(gooby, 16, 0, 8, 8, goobyX, goobyY, 8, 8);
@@ -340,8 +336,10 @@ const drawGooby = () => {
 
 }
 
+
+
         //Player movement functions
-        const keyDownHandler = e => {//key-pressed
+        const keyDownHandler = e => {
             if(e.keyCode === 65){//left
                 leftPressed = true;
                 lastButtonPressed = "left";
@@ -356,10 +354,12 @@ const drawGooby = () => {
                 lastButtonPressed = "down";
             } else if(e.keyCode === 32){//spacebar
                 spaceBarPressed = true;
+            } else if(e.keyCode === 16){//leftshift
+                shiftPressed = true;
             }
         }
 
-        const keyUpHandler = e => {//key-up (stopped pressing)
+        const keyUpHandler = e => {
             if(e.keyCode === 65){//left
                 leftPressed = false;
             } else if(e.keyCode === 68){//right
@@ -370,6 +370,8 @@ const drawGooby = () => {
                 downPressed = false;  
             } else if(e.keyCode === 32){//spacebar
                 spaceBarPressed = false;
+            } else if(e.keyCode === 16){//leftshift
+                shiftPressed = false;
             }
         }
 
