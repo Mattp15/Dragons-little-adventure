@@ -30,6 +30,7 @@ let goobyEXP = 0;
 let goobyHealth = 4; 
 let stunTimer = 0;
 let goobyRange = 15;
+let jumpTimer = true;
 
 class DefaultObject {
     constructor(x, y, width, height){
@@ -240,24 +241,39 @@ const drawGooby = () => {
     let walk = 1;
     animationCounter++;
     cdTimer++;
-    if(!spaceBarPressed && !collision(goobyX, goobyY + walk, map)){
+    if(spaceBarPressed && !collision(goobyX, goobyY - walk, map) && jumpTimer){
+        console.log("jump");
+        setTimeout(() => {
+            jumpTimer = false;
+        }, 300)
+        setTimeout(() => {
+            jumpTimer = true;
+            spaceBarPressed = false;
+        }, 300);
+        walk = 2;
+        if(!rightPressed && !leftPressed){
+        goobyY -= walk;
+            ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY - walk, 8, 8);
+    }   else if(rightPressed && !leftPressed){
+        goobyY -= walk;
+        goobyX += walk/2;
+        ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY - walk, 8, 8);
+    }   else if(!rightPressed && leftPressed){
+        goobyY -= walk;
+        goobyX -= walk/2;
+        ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY - walk, 8, 8);;
+    }
+
+    }
+         else if(!spaceBarPressed && !collision(goobyX, goobyY + walk, map)){
         if(downPressed){
-            walk++;
+            walk = 2;
         }
-        goobyY += walk;
-        if(currentAnimation === 0){
+            goobyY += walk;
             ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);
-        }else if(currentAnimation === 1){
-            ctx.drawImage(gooby, 40, 0, 8, 8, goobyX, goobyY, 8, 8);
-        }
-        if(animationCounter >= 6){
-            currentAnimation++;
-            animationCounter = 0;
-            if(currentAnimation > 1){
-                currentAnimation = 0;
-            }
-        }
-    }   else if(shiftPressed && cdTimer > cdDefault-buffs){
+
+    }   
+       else if(shiftPressed && cdTimer > cdDefault-buffs){
         if(lastButtonPressed === 'up'){
             ctx.drawImage(bitMap, 8, 8, 8, 8, goobyX, goobyY, 8, 8)
             let fireBall = new Projectile(goobyX, goobyY-4, 8, 8, 2, 'up', 'gooby');
@@ -369,7 +385,7 @@ const drawGooby = () => {
             } else if(e.keyCode === 83){//down
                 downPressed = false;  
             } else if(e.keyCode === 32){//spacebar
-                spaceBarPressed = false;
+                // spaceBarPressed = false;
             } else if(e.keyCode === 16){//leftshift
                 shiftPressed = false;
             }
