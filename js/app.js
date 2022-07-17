@@ -32,7 +32,7 @@ let stunTimer = 0;
 let goobyRange = 15;
 let jumpTimer = true;
 let canJump = false;
-let airBourne = true;
+let airBourne = false;
 let iFrames = false;
 const textArray = [];
 
@@ -330,7 +330,7 @@ const objectCollision = () => {
             }
         }
     
-
+//Character Drawing///////////////////////////////////////////////////////////////////
 const drawGooby = () => {
     const jump = 1;//rate of jump speed up
     let walk = 1;//left-right speed
@@ -369,27 +369,27 @@ const drawGooby = () => {
         airBourne = false;
 
    
-    }   if(airBourne){
-        goobyY -= jump;
+    }   if(airBourne){//going up
+        console.log("going up")
+        goobyY -= jump * 1.25;
             setTimeout(()=>{
             airBourne = false;
-            }, 300);//Jumping time in air
+            }, 350);//Jumping time in air
         }
     
     if(collision(goobyX, goobyY + 1, map)){
         canJump = true;
 
-    }if(!airBourne && !collision(goobyX, goobyY + 1, map)){
-        console.log('airbourne')
+    }if(!airBourne && !collision(goobyX, goobyY + 1, map)){//Falling
+        console.log('going down')
         goobyY += jump;
 
     }if(rightPressed){
         if(!collision(goobyX + 1, goobyY, map)){
         goobyX += walk;
 
-        }if(airBourne){
-            console.log('slowair')
-            goobyY += walk/3;
+        }if(airBourne && collision(goobyX + 1, goobyY, map)){
+            goobyY += walk * 0.75;//Reduces fallspeed/jumpspeed when pressing into walls
         }
         //animationCounter++;
         //add Animation incrementer in the left and right
@@ -398,9 +398,8 @@ const drawGooby = () => {
         if(!collision(goobyX - 1, goobyY, map)){
             goobyX -= walk;
             
-        }if(airBourne){
-            console.log('slowair')
-            goobyY += walk/3;
+        }if(airBourne && collision(goobyX - 1, goobyY, map)){
+            goobyY += walk * 0.75;//Reduces fallspeed/jumpspeed when pressing into walls
         }
     }
         ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);
@@ -542,13 +541,14 @@ const drawGooby = () => {
         jumpCount = 1;
     }*/
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////End Character Drawing
 
 
 
 
 
 
-        //Player movement functions
+        //Player input functions/////////////////////////////////////////////////////////////
         const keyDownHandler = e => {
             if(e.keyCode === 65){//left
                 leftPressed = true;
@@ -586,7 +586,7 @@ const drawGooby = () => {
                 shiftPressed = false;
             }
         }
-
+//////////////////////////////////////////////////////////////////////////////////
         const collision = (x, y, map) => {
             for(let i = 0; i < map.length; i++){
                 for(let j = 0; j < map[i].length; j++){
@@ -622,19 +622,19 @@ document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
 /*blank level template
     [
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
     */
