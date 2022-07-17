@@ -104,8 +104,14 @@ class MapBundler{
 }
 }
 
+//Interface handler///////////////////////////////////
 const scoreText = new Text(0, 10, 0, 0, "SCORE:");
 textArray.push(scoreText);
+//Do interface drawing here also
+//textArray.push(interfaceDrawing);
+
+///////////////////////////////////////////////////////end interface handler
+
 ////////////////////////////////////////////////////////////////zone1 20 rows, 25 collumns
 const tileSet1 = [
     [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
@@ -246,7 +252,8 @@ const drawText = texts => {
             ctx.fillStyle = "white";
             ctx.font = "12px Arial";
             ctx.fillText(texts[i].line + goobyEXP, texts[i].x, texts[i].y)
-        }
+
+        }//if(interface => draw interface)
     }
 }
 
