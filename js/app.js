@@ -3,6 +3,8 @@ document.body.style.backgroundColor = "rgba(0, 0, 0, 0.9)";
 let ctx = canvas.getContext("2d");
 document.body.style.zoom = "500%";
 const fps = 60;
+const background = new Image();
+background.src = "images/background.png"
 const bitMap = new Image();
 bitMap.src = "images/bitmap-terrain-slime-character-attacks.png";
 const gooby = new Image();
@@ -22,8 +24,8 @@ let upPressed = false;
 let lastButtonPressed = 'right';
 let spaceBarPressed = false;
 let shiftPressed = false;
-let goobyX = 16;
-let goobyY = 30;
+let goobyX = 9;
+let goobyY = 97;
 let projX = goobyX;
 let projY = goobyY;
 let currentAnimation = 0;
@@ -138,12 +140,12 @@ const tileSet1 = [
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
 const objectsTileSet1 = [];
-tempObject = new Enemy(24, 32, 8, 8, 'blueSlime', 0.1, 2);
-tempObject.movementGenerator();
-objectsTileSet1.push(tempObject);
-tempObject = new Enemy(40, 40, 8, 8, "blueSlime", 0.1, 4);
-tempObject.movementGenerator();
-objectsTileSet1.push(tempObject);
+// tempObject = new Enemy(40, 40, 8, 8, 'blueSlime', 0.1, 2);
+// tempObject.movementGenerator();
+// objectsTileSet1.push(tempObject);
+// tempObject = new Enemy(40, 40, 8, 8, "blueSlime", 0.1, 4);
+// tempObject.movementGenerator();
+// objectsTileSet1.push(tempObject);
 tempObject = new Zone(76, 74, 8, 8, 1, 8, 82);
 objectsTileSet1.push(tempObject);
 tempObject = new Zone(76, 82, 8, 8, 1, 8, 82);
@@ -279,21 +281,21 @@ const drawProjectiles = (obj) => {
     for(let i = 0; i < obj.length; i++){
         obj[i].distance++;
         if(obj[i].projectileSource === "gooby"){
-                if(obj[i].direction === 'up' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){  //add object collison conditional !projectileCollision(obj[i], gameObjects);            
-                obj[i].y -= obj[i].projSpeed;
-                ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);    //need new image     
-                }
+                // if(obj[i].direction === 'up' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){  //add object collison conditional !projectileCollision(obj[i], gameObjects);            
+                // obj[i].y -= obj[i].projSpeed;
+                // ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);    unsure if i'm putting this in
+                // }
                 if(obj[i].direction === 'right' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){
                 obj[i].x+=obj[i].projSpeed;
-                ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);//need new image
+                ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x + 10, obj[i].y + 4, 8, 8);
                 }
-                if(obj[i].direction === 'down' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){
-                obj[i].y += obj[i].projSpeed;
-                ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);//need new image
-                }
+                // if(obj[i].direction === 'down' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){
+                // obj[i].y += obj[i].projSpeed;
+                // ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);//same with this
+                // }
                 if(obj[i].direction === 'left' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){
                 obj[i].x -= obj[i].projSpeed;
-                ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);  //need new image  
+                ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x + 6, obj[i].y + 4, 8, 8);
                 } 
                 if(collision(obj[i].x, obj[i].y, map) || projectileCollision(obj[i]) || obj[i].distance >= goobyRange){
                     obj.shift();
@@ -413,29 +415,71 @@ const drawGooby = () => {
         }if(airBourne && collision(goobyX - 1, goobyY, map)){
             goobyY += walk * 0.75;//Reduces fallspeed/jumpspeed when pressing into walls
         }
-    }
+
+    }if(rightPressed){
+        if(currentAnimation === 0){
+            ctx.drawImage(updatedRight, 200, 0, 64, 40, goobyX, goobyY, 32, 16);
+
+        }else if(currentAnimation === 1){
+            ctx.drawImage(updatedRight, 140, 0, 64, 40, goobyX, goobyY, 32, 16);
+
+        }else if( currentAnimation === 2){
+            ctx.drawImage(updatedRight, 62, 0, 64, 40, goobyX, goobyY, 32, 16);
+
+            
+        }
+        if(animationCounter >= 12){
+            console.log(animationCounter, 'animationCounter');
+            console.log(currentAnimation, 'currentAnimation')
+            currentAnimation++;
+            animationCounter = 0;
+            if(currentAnimation > 2){
+                currentAnimation = 0;
+            }
+        } 
+
+    }if(leftPressed){
+        if(currentAnimation === 0){
+            ctx.drawImage(updated, 0, 0, 64, 40, goobyX, goobyY, 32, 16);
+
+        }else if(currentAnimation === 1){
+            ctx.drawImage(updated, 64, 0, 64, 40, goobyX, goobyY, 32, 16);
+
+        }else if( currentAnimation === 2){
+            ctx.drawImage(updated, 128, 0, 64, 40, goobyX, goobyY, 32, 16);
+
+            
+        }
+        if(animationCounter >= 12){
+            console.log(animationCounter, 'animationCounter');
+            console.log(currentAnimation, 'currentAnimation')
+            currentAnimation++;
+            animationCounter = 0;
+            if(currentAnimation > 2){
+                currentAnimation = 0;
+            }
+        } 
+
+    }if(currentAnimation === 3){
         switch(lastButtonPressed){
-            case 'right':
-                if(currentAnimation === 3){
-                    ctx.drawImage(updatedRight, 200, 40, 64, 40, goobyX, goobyY, 64, 40);
-                }else if(currentAnimation === 0){
-                    ctx.drawImage(updatedRight, 200, 0, 64, 40, goobyX, goobyY, 64, 40);
-                }else if(currentAnimation === 1){
+            case "right":
+            ctx.drawImage(updatedRight, 192, 42, 64, 40, goobyX - 10, goobyY +2, 32, 16);
+            break;
+            case "left":
+                ctx.drawImage(updated, 0, 42, 64, 40, goobyX + 10, goobyY + 2, 32, 16);
+                break;
+        }   
 
-                }else if(currentAnimation = 2){
-
-                    currentAnimation = 0;
-                }
-
-                        break;
-                        
-                
-                
-            case 'left':                  
+    }else if(!rightPressed && !leftPressed) {
+        switch(lastButtonPressed){
+            case "right":
+            ctx.drawImage(updatedRight, 200, 0, 64, 40, goobyX, goobyY, 32, 16);
+            break;
+            case "left":
+                ctx.drawImage(updated, 0, 0, 64, 40, goobyX, goobyY, 32, 16);
                 break;
         }
-    
-
+    }
    /*
     if(spaceBarPressed && !collision(goobyX, goobyY - walk, map) && jumpTimer && stunTimer <= 0){
        walk = 1;
@@ -589,15 +633,16 @@ const drawGooby = () => {
                 lastButtonPressed = "right";
             } else if(e.keyCode === 87){//up
                 upPressed = true;
-                lastButtonPressed = "up";
+                // lastButtonPressed = "up";
             } else if(e.keyCode === 83){//down
                 downPressed = true;
-                lastButtonPressed = "down";
+                // lastButtonPressed = "down";
             } else if(e.keyCode === 32 && !airBourne && canJump){//spacebar
                 canJump = false;
                 airBourne = true;
                 spaceBarPressed = true;
             } else if(e.keyCode === 16){//leftshift
+
                 currentAnimation = 3;
                 setTimeout(() => {
                     currentAnimation = 0;
@@ -622,7 +667,6 @@ const drawGooby = () => {
                 // spaceBarPressed = false;
             } else if(e.keyCode === 16){//leftshift
                 shiftPressed = false;
-                currentAnimation = 0;
             }
         }
 //////////////////////////////////////////////////////////////////////////////////
@@ -631,7 +675,8 @@ const drawGooby = () => {
                 for(let j = 0; j < map[i].length; j++){
                     
                     if(map[i][j] != 0){                  
-                         if(x <= j*64 && x >= j*64&& y <= i*64 && y >= i*64){//x = 8  to 88
+                         if(x <= j*8 + 4 && x >= j*8-24   && y <= i*8+16 && y >= i*8-14){
+                            // (x <= j*16+6 && x >= j*16 && y <= i*16+16 && y >= i*16)
                             return true;
                         }
                     }                 
