@@ -7,6 +7,14 @@ const bitMap = new Image();
 bitMap.src = "images/bitmap-terrain-slime-character-attacks.png";
 const gooby = new Image();
 gooby.src = "images/peaceful-dragon.png";
+const updatedRight = new Image();
+updatedRight.src = "images/bitmapDragonRight.png";
+const updated = new Image();
+updated.src = "images/bitmapDragon.png";
+const fireBallSound = new Audio();
+fireBallSound.src = "sounds/Fireball.mp3";
+const jumpSound = new Audio();
+jumpSound.src = "sounds/wing-flap.mp3";
 let rightPressed = false;
 let downPressed = false;
 let leftPressed = false;
@@ -14,8 +22,8 @@ let upPressed = false;
 let lastButtonPressed = 'right';
 let spaceBarPressed = false;
 let shiftPressed = false;
-let goobyX = 8;
-let goobyY = 82;
+let goobyX = 16;
+let goobyY = 30;
 let projX = goobyX;
 let projY = goobyY;
 let currentAnimation = 0;
@@ -289,7 +297,8 @@ const drawProjectiles = (obj) => {
                 } 
                 if(collision(obj[i].x, obj[i].y, map) || projectileCollision(obj[i]) || obj[i].distance >= goobyRange){
                     obj.shift();
-                } 
+                }
+                fireBallSound.play();
             }
             //add if here
         }   
@@ -346,26 +355,21 @@ const drawGooby = () => {
     //Attack animation
     if(shiftPressed && cdTimer > cdDefault-buffs){
         if(lastButtonPressed === 'up'){
-        ctx.drawImage(bitMap, 8, 8, 8, 8, goobyX, goobyY, 8, 8)//need new image
         let fireBall = new Projectile(goobyX, goobyY-4, 8, 8, 2, 'up', 'gooby');
         projectiles.push(fireBall);
         shiftPressed = false;
        
-        } 
-        else if(lastButtonPressed === 'right'){
-        ctx.drawImage(bitMap, 16, 8, 8, 8, goobyX, goobyY, 8, 8)//need new image
+        }else if(lastButtonPressed === 'right'){
         let fireBall = new Projectile(goobyX+4, goobyY, 8, 8, 2, 'right', 'gooby');
         projectiles.push(fireBall);
         shiftPressed = false;
-        } 
-        else if(lastButtonPressed === 'down'){
-        ctx.drawImage(bitMap, 0, 8, 8, 8, goobyX, goobyY, 8, 8)//need new image
+
+        }else if(lastButtonPressed === 'down'){
         let fireBall = new Projectile(goobyX, goobyY+4, 8, 8, 2, 'down', 'gooby');
         projectiles.push(fireBall);
         shiftPressed = false;
-        } 
-        else if(lastButtonPressed === 'left'){
-        ctx.drawImage(bitMap, 24, 8, 8, 8, goobyX, goobyY, 8, 8)//need new image
+
+        }else if(lastButtonPressed === 'left'){
         let fireBall = new Projectile(goobyX-4, goobyY, 8, 8, 2, 'left', 'gooby');
         projectiles.push(fireBall);
         shiftPressed = false;
@@ -377,6 +381,7 @@ const drawGooby = () => {
 
    
     }   if(airBourne){//going up
+        jumpSound.play();
         console.log("going up")
         goobyY -= jump * 1.25;
             setTimeout(()=>{
@@ -409,7 +414,26 @@ const drawGooby = () => {
             goobyY += walk * 0.75;//Reduces fallspeed/jumpspeed when pressing into walls
         }
     }
-        ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);
+        switch(lastButtonPressed){
+            case 'right':
+                if(currentAnimation === 3){
+                    ctx.drawImage(updatedRight, 200, 40, 64, 40, goobyX, goobyY, 64, 40);
+                }else if(currentAnimation === 0){
+                    ctx.drawImage(updatedRight, 200, 0, 64, 40, goobyX, goobyY, 64, 40);
+                }else if(currentAnimation === 1){
+
+                }else if(currentAnimation = 2){
+
+                    currentAnimation = 0;
+                }
+
+                        break;
+                        
+                
+                
+            case 'left':                  
+                break;
+        }
     
 
    /*
@@ -550,7 +574,7 @@ const drawGooby = () => {
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////End Character Drawing
 
-
+///audioHandler
 
 
 
@@ -574,6 +598,10 @@ const drawGooby = () => {
                 airBourne = true;
                 spaceBarPressed = true;
             } else if(e.keyCode === 16){//leftshift
+                currentAnimation = 3;
+                setTimeout(() => {
+                    currentAnimation = 0;
+                }, 300)
                 shiftPressed = true;
             }
         }
@@ -581,16 +609,20 @@ const drawGooby = () => {
         const keyUpHandler = e => {
             if(e.keyCode === 65){//left
                 leftPressed = false;
+                currentAnimation = 0;
             } else if(e.keyCode === 68){//right
                 rightPressed = false;
+                currentAnimation = 0;
             } else if(e.keyCode === 87){//up
                 upPressed = false;         
             } else if(e.keyCode === 83){//down
                 downPressed = false;  
+                currentAnimation = 0;
             } else if(e.keyCode === 32){//spacebar
                 // spaceBarPressed = false;
             } else if(e.keyCode === 16){//leftshift
                 shiftPressed = false;
+                currentAnimation = 0;
             }
         }
 //////////////////////////////////////////////////////////////////////////////////
@@ -599,7 +631,7 @@ const drawGooby = () => {
                 for(let j = 0; j < map[i].length; j++){
                     
                     if(map[i][j] != 0){                  
-                         if(x <= j*8+6 && x >= j*8-4 && y <= i*8+4 && y >= i*8-4){//x = 8  to 88
+                         if(x <= j*64 && x >= j*64&& y <= i*64 && y >= i*64){//x = 8  to 88
                             return true;
                         }
                     }                 
