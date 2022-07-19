@@ -13,10 +13,11 @@ const updatedRight = new Image();
 updatedRight.src = "images/bitmapDragonRight.png";
 const updated = new Image();
 updated.src = "images/bitmapDragon.png";
-const fireBallSound = new Audio();
-fireBallSound.src = "sounds/Fireball.mp3";
-const jumpSound = new Audio();
-jumpSound.src = "sounds/wing-flap.mp3";
+
+
+
+const jumper = new Image();
+jumper.src = "images/newchar.png";
 let rightPressed = false;
 let downPressed = false;
 let leftPressed = false;
@@ -70,20 +71,20 @@ class Projectile extends DefaultObject{
     }
 }
 class Enemy extends DefaultObject{
-    constructor(x, y, width, height, mobType, speed, onHitLocationX, onHitLocationY, health = 1, expValue = 1){
+    constructor(x, y, width, height, mobType, speed, onHitLocationX, onHitLocationY, health){
         super(x, y, width, height);
         this.mobType = mobType;
         this.speed = speed;
         this.onHitLocationX = onHitLocationX;
         this.onHitLocationY = onHitLocationY;
+        this.health = 1;
         this.random = 1;
         this.firesProjectiles = false;
         this.animationCounter = 0;
         this.currentAnimation = 0;
         this.movement = 0;
         this.previousDirection = 'up';
-        this.health = health;
-        this.expValue = expValue;
+        this.expValue = 1;
         this.enemy = true;
         this.text = false;
     }
@@ -143,7 +144,7 @@ const tileSet1 = [
     [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 9],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 9],
-    [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 9],
+    [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 0, 1, 1, 1, 1, 9],
     [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 9],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 9],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 9],
@@ -173,13 +174,16 @@ tempObject = new Enemy(40, 124, 8, 8, "blueSlime", 0.1, 9, 140, 1);
 tempObject.movementGenerator();
 objectsTileSet1.push(tempObject);
 tempObject = new Enemy(130, 140, 8, 8, "up-down", 0.1, 9, 140, 1);
+tempObject.health = 100000000;
 objectsTileSet1.push(tempObject);
 tempObject = new Enemy(136, 140, 8, 8, "up-down", 0.1, 9, 140, 1);
+tempObject.health = 1000000000;
 objectsTileSet1.push(tempObject);
 tempObject = new Enemy(40, 40, 8, 8, "up-down", 0.1, 9, 140, 1);
+tempObject.health = 100000000;
 objectsTileSet1.push(tempObject);
 //////////////mobs^
-tempObject = new Zone(112, 32, 8, 8, 1, 8, 82);
+tempObject = new Zone(112, 36, 8, 8, 1, 8, 82);
 objectsTileSet1.push(tempObject);
 tempObject = new Zone(6, 10, 8, 8, 1, 8, 82);
 objectsTileSet1.push(tempObject);
@@ -316,23 +320,13 @@ const drawEnemy = obj => {
                     obj[i].previousDirection = 'up';
 
                         }
-                    }
+                    }                                 
+                    
+                ctx.drawImage(jumper, 8, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);//need new image
+                }
+                
                     
                 
-                }
-                if(!obj[i].currentAnimation){
-                    ctx.drawImage(bitMap, 25, 0, 8, 8, obj[i].x, obj[i].y, 8, 8);//need new image
-                } else if(obj[i].currentAnimation === 1){
-                    ctx.drawImage(bitMap, 32, 0, 8, 8, obj[i].x, obj[i].y, 8, 8);//need new image
-                }
-                if(obj[i].animationCounter >= 6){
-                    obj[i].currentAnimation++;
-                    obj[i].animationCounter = 0;
-                    if(obj[i].currentAnimation > 1){
-                        obj[i].currentAnimation = 0;
-                    }
-               
-                }
             }
 
             //End of blue slime AI
@@ -379,9 +373,12 @@ const drawProjectiles = (obj) => {
                 ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y + 4, 8, 8);
                 } 
                 if(collision(obj[i].x, obj[i].y, map) || projectileCollision(obj[i]) || obj[i].distance >= goobyRange){
+                    if(obj[i].health<0){
+                        console.log(obj[i].health)
                     obj.shift();
+                    }
                 }
-                fireBallSound.play();
+                
             }
             //add if here
         }   
@@ -429,7 +426,7 @@ const objectCollision = () => {
                     }
 
             }if(gameObjects[k].isZone){
-                ctx.drawImage(bitMap, 0, 8, 8, 8, gameObjects[k].x, gameObjects[k].y, 8, 8);
+                // ctx.drawImage(bitMap, 0, 8, 8, 8, gameObjects[k].x, gameObjects[k].y, 8, 8);
                 if(goobyX >= gameObjects[k].x  && goobyX <= gameObjects[k].x + 2 && goobyY >= gameObjects[k].y  && goobyY <= gameObjects[k].y + 8){
                 goobyX = gameObjects[k].newZoneStartX;
                 goobyY = gameObjects[k].newZoneStartY;
@@ -476,12 +473,12 @@ const drawGooby = () => {
         }   
         cdTimer = 0;
         console.log(fireDirection)
-    }if(collision(goobyX, goobyY - 1, map)){
+    }if(collision(goobyX+2, goobyY - 1, map)){
         airBourne = false;
+        
 
    
     }   if(airBourne){//going up
-            jumpSound.play();
             goobyY -= jump * 2;
             setTimeout(()=>{
             airBourne = false;
@@ -493,6 +490,7 @@ const drawGooby = () => {
     }if(collision(goobyX, goobyY + 1, map) && !canJump){
         goobyY-=2;
         canJump = true;
+        currentAnimation = 0;
 
     }if(!airBourne && !collision(goobyX, goobyY + 1, map)){//Falling
         goobyY += jump * 1.5;
@@ -518,15 +516,15 @@ const drawGooby = () => {
     }if(rightPressed){
         if(currentAnimation === 0){
             // ctx.drawImage(updatedRight, 206, 0, 64, 40, goobyX, goobyY, 64, 40);
-            ctx.drawImage(bitMap, 0, 8, 8, 8, goobyX, goobyY, 8, 8);
+            ctx.drawImage(jumper, 0, 0, 8, 8, goobyX, goobyY, 8, 8);
 
         }else if(currentAnimation === 1){
             // ctx.drawImage(updatedRight, 141, 0, 64, 40, goobyX, goobyY, 64, 40);
-            ctx.drawImage(bitMap, 0, 8, 8, 8, goobyX, goobyY, 8, 8);
+            ctx.drawImage(jumper, 0, 0, 8, 8, goobyX, goobyY, 8, 8);
 
         }else if( currentAnimation === 2){
             // ctx.drawImage(updatedRight, 76, 0, 64, 40, goobyX, goobyY, 64, 40);
-            ctx.drawImage(bitMap, 0, 8, 8, 8, goobyX, goobyY, 8, 8);
+            ctx.drawImage(jumper, 0, 0, 8, 8, goobyX, goobyY, 8, 8);
 
             
         }
@@ -541,16 +539,13 @@ const drawGooby = () => {
     }if(leftPressed){
         if(currentAnimation === 0){
             // ctx.drawImage(updated, 0, 0, 58, 40, goobyX, goobyY, 64, 40);
-            ctx.drawImage(bitMap, 0, 8, 8, 8, goobyX, goobyY, 8, 8);
-
+            ctx.drawImage(jumper, 8, 0, 8, 8, goobyX, goobyY, 8, 8);
         }else if(currentAnimation === 1){
             // ctx.drawImage(updated, 64, 0, 58, 40, goobyX, goobyY, 64, 40);
-            ctx.drawImage(bitMap, 0, 8, 8, 8, goobyX, goobyY, 8, 8);
-
+            ctx.drawImage(jumper, 8, 0, 8, 8, goobyX, goobyY, 8, 8);
         }else if( currentAnimation === 2){
             // ctx.drawImage(updated, 128, 0, 64, 40, goobyX, goobyY, 64, 40);
-            ctx.drawImage(bitMap, 0, 8, 8, 8, goobyX, goobyY, 8, 8);
-
+            ctx.drawImage(jumper, 8, 0, 8, 8, goobyX, goobyY, 8, 8);
             
         }
         if(animationCounter >= 12){
@@ -564,11 +559,11 @@ const drawGooby = () => {
         switch(lastButtonPressed){
             case "right":
             // ctx.drawImage(updatedRight, 192, 42, 64, 40, goobyX - 10, goobyY +2, 64, 40);
-            ctx.drawImage(bitMap, 0, 8, 8, 8, goobyX, goobyY, 8, 8);
+            ctx.drawImage(jumper, 24, 0, 8, 8, goobyX, goobyY, 8, 8);
             break;
             case "left":
                 // ctx.drawImage(updated, 0, 42, 64, 40, goobyX + 10, goobyY + 2, 64, 40);
-                ctx.drawImage(bitMap, 0, 8, 8, 8, goobyX, goobyY, 8, 8);
+                ctx.drawImage(jumper, 16, 0, 8, 8, goobyX, goobyY, 8, 8);
                 break;
         }   
 
@@ -576,11 +571,11 @@ const drawGooby = () => {
         switch(lastButtonPressed){
             case "right":
             // ctx.drawImage(updatedRight, 200, 0, 64, 40, goobyX, goobyY, 64, 40);
-            ctx.drawImage(bitMap, 0, 8, 8, 8, goobyX, goobyY, 8, 8);
+            ctx.drawImage(jumper, 0, 0, 8, 8, goobyX+1, goobyY, 8, 8);
             break;
             case "left":
                 // ctx.drawImage(updated, 0, 0, 64, 40, goobyX, goobyY, 64, 40);
-                ctx.drawImage(bitMap, 0, 8, 8, 8, goobyX, goobyY, 8, 8);
+                ctx.drawImage(jumper, 8, 0, 8, 8, goobyX, goobyY, 8, 8);
                 break;
         }
     }
@@ -749,12 +744,11 @@ const drawGooby = () => {
                 canJump = false;
                 airBourne = true;
                 spaceBarPressed = true;
+                currentAnimation = 3;
+
             } else if(e.keyCode === 16){//leftshift
 
-                currentAnimation = 3;
-                setTimeout(() => {
-                    currentAnimation = 0;
-                }, 300)
+                
                 shiftPressed = true;
             }
         }
