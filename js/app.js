@@ -137,9 +137,8 @@ class MapBundler{
 
 //Do interface drawing here also
 //textArray.push(interfaceDrawing);
+let playerText = new Text(0, 10, 0, 0, `LIVESx ${playerHealth}`);
 
-///////////////////////////////////////////////////////end interface handler
-const playerText = new Text(0, 10, 0, 0, `LIVESx ${playerHealth}`)
 ////////////////////////////////////////////////////////////////zone1 20 rows, 25 collumns
 const tileSet1 = [
     [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
@@ -167,6 +166,8 @@ objectsTileSet1.push(tempObject);
 tempObject = new Zone(112, 32, 8, 8, 1, 8, 82);
 objectsTileSet1.push(tempObject);
 tempObject = new Zone(6, 18, 8, 8, 1, 8, 82);
+objectsTileSet1.push(tempObject);
+tempObject = new Text(200, 10, 0, 0, 'LEVEL: 1');
 objectsTileSet1.push(tempObject);
 tempObject = new Text(200, 10, 0, 0, 'LEVEL: 1');
 objectsTileSet1.push(tempObject);
@@ -274,7 +275,7 @@ const drawEnemy = obj => {
             ctx.font = "12px Arial";
             ctx.fillText(gameObjects[i].line, gameObjects[i].x, gameObjects[i].y)
         }
-
+        
         
     }
 }
@@ -335,12 +336,16 @@ const projectileCollision = (projectile) => {
 } 
 //notes for sidescroller transition > if(!spaceBarPressed && collision(x, y-1, map)) //if spacebarPressed = true && !collision(x, y -4, map) && !collision(x+1, y, map)>reduce velocity for rest of up //if !spaceBarPressed ** !collision(x, y-4, map), increase velocity, 
 const objectCollision = () => {
+
+   let playerIndex = gameObjects.indexOf(playerText)
+    gameObjects.splice(playerIndex, 1)
     if(!gameObjects.includes(playerText)){
-        gameObjects.push(playerText);
+        gameObjects.push(playerText = new Text(0, 10, 0, 0, `LIVESx ${playerHealth}`));
     }
         for(let k = 0; k < gameObjects.length; k++){
                         
             if(goobyX >= gameObjects[k].x - 4 && goobyX <= gameObjects[k].x + 4 && goobyY >= gameObjects[k].y -4 && goobyY <= gameObjects[k].y + 4 && gameObjects[k].health > 0){
+                console.log('in enemy')
                 if(gameObjects[k].enemy && !iFrames){
                     iFrames = true;
                     setTimeout(() => {
@@ -351,6 +356,8 @@ const objectCollision = () => {
                         gameObjects[k].isStunned = false;
                     }, gameObjects[k].selfStun);
                     stunTimer = gameObjects[k].stunLength;
+                    playerHealth--;
+                    console.log(playerHealth)
                     }
 
             }if(gameObjects[k].isZone){
@@ -363,7 +370,7 @@ const objectCollision = () => {
                 }
             }
         }   
-        
+    
     }    
 
     
