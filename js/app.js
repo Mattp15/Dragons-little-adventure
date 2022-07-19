@@ -25,7 +25,7 @@ let lastButtonPressed = 'right';
 let spaceBarPressed = false;
 let shiftPressed = false;
 let goobyX = 9;
-let goobyY = 96;
+let goobyY = 140;
 let projX = goobyX;
 let projY = goobyY;
 let currentAnimation = 0;
@@ -70,24 +70,22 @@ class Projectile extends DefaultObject{
     }
 }
 class Enemy extends DefaultObject{
-    constructor(x, y, width, height, mobType, speed, random, health = 1, expValue = 1){
+    constructor(x, y, width, height, mobType, speed, onHitLocationX, onHitLocationY, health = 1, expValue = 1){
         super(x, y, width, height);
         this.mobType = mobType;
         this.speed = speed;
-        this.random = random;
+        this.onHitLocationX = onHitLocationX;
+        this.onHitLocationY = onHitLocationY;
+        this.random = 1;
         this.firesProjectiles = false;
         this.animationCounter = 0;
         this.currentAnimation = 0;
         this.movement = 0;
-        this.previousDirection = 'right';
+        this.previousDirection = 'up';
         this.health = health;
         this.expValue = expValue;
         this.enemy = true;
         this.text = false;
-        this.stunLength = 1.5;
-        this.isStunned = false;
-        this.selfStun = 2000;
-        this.activity = 'random';
     }
     movementGenerator() {
         setInterval(() => {
@@ -141,56 +139,81 @@ let playerText = new Text(0, 10, 0, 0, `LIVESx ${playerHealth}`);
 
 ////////////////////////////////////////////////////////////////zone1 20 rows, 25 collumns
 const tileSet1 = [
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1],
-    [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 9],
+    [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 9],
+    [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 9],
+    [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9],
+    [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 9],
+    [1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 9],
+    [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 9],
+    [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 9],
+    [1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9]]
 const objectsTileSet1 = [];
-tempObject = new Enemy(100, 100, 8, 8, 'blueSlime', 0.1, 2);
+tempObject = new Enemy(112, 32, 8, 8, 'blueSlime', 0.1, 9, 140, 2);
 tempObject.movementGenerator();
 objectsTileSet1.push(tempObject);
-tempObject = new Enemy(40, 40, 8, 8, "blueSlime", 0.1, 1);
+tempObject = new Enemy(8, 16, 8, 8, "up-down", 0.1, 9, 140, 1);
 tempObject.movementGenerator();
 objectsTileSet1.push(tempObject);
+tempObject = new Enemy(100, 88, 8, 8, "blueSlime", 0.1, 9, 140, 1);
+tempObject.movementGenerator();
+objectsTileSet1.push(tempObject);
+tempObject = new Enemy(40, 124, 8, 8, "blueSlime", 0.1, 9, 140, 1);
+tempObject.movementGenerator();
+objectsTileSet1.push(tempObject);
+tempObject = new Enemy(130, 140, 8, 8, "up-down", 0.1, 9, 140, 1);
+objectsTileSet1.push(tempObject);
+tempObject = new Enemy(136, 140, 8, 8, "up-down", 0.1, 9, 140, 1);
+objectsTileSet1.push(tempObject);
+tempObject = new Enemy(40, 40, 8, 8, "up-down", 0.1, 9, 140, 1);
+objectsTileSet1.push(tempObject);
+//////////////mobs^
 tempObject = new Zone(112, 32, 8, 8, 1, 8, 82);
 objectsTileSet1.push(tempObject);
-tempObject = new Zone(6, 18, 8, 8, 1, 8, 82);
+tempObject = new Zone(6, 10, 8, 8, 1, 8, 82);
 objectsTileSet1.push(tempObject);
+///////////// portals^
 tempObject = new Text(200, 10, 0, 0, 'LEVEL: 1');
 objectsTileSet1.push(tempObject);
 tempObject = new Text(200, 10, 0, 0, 'LEVEL: 1');
 objectsTileSet1.push(tempObject);
+/////////text display^
 let bundle = new MapBundler(objectsTileSet1, tileSet1);
 gameMaps.push(bundle);
  //////////////////////////////////////////////////////////zone 1
 ///////////////////////////////////////////////////////////zone 2
 const tileSet2 = [
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+    [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+    [1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9]]
 const objectsTileSet2 = [];
 
 bundle = new MapBundler(objectsTileSet2, tileSet2);
@@ -231,23 +254,30 @@ const drawEnemy = obj => {
     for(let i = 0; i < obj.length; i++){
         if(obj[i].enemy && obj[i].health>0){
             obj[i].animationCounter += obj[i].speed;
-            if(!collision(obj[i].x, obj[i].y + 2, map)){
-            obj[i].y += obj[i].speed +1;
-
-            }
+            
             if(obj[i].mobType === 'blueSlime'){
+                if(!collision(obj[i].x, obj[i].y + 1, map)){
+                    obj[i].y += obj[i].speed +1;
+        
+                    }
                 
                 switch(obj[i].random){
                 case 1:
-                    if(!collision(obj[i].x  - obj[i].speed - 2, obj[i].y, map)){
-                    obj[i].x -= obj[i].speed;
-                    obj[i].previousDirection = 'left';//I don't think I need this
+                    if(!collision(obj[i].x  - obj[i].speed, obj[i].y, map)){
+                    obj[i].x -= obj[i].speed* 3;
+                    if(collision(obj[i].x - obj[i].speed, obj[i].y, map)){
+                        obj[i].random = 2;
+                    }
+                    console.log('incase1')
                     }
                     break;
                 case 2:
-                    if(!collision(obj[i].x + obj[i].speed + 2, obj[i].y, map)){
-                    obj[i].x += obj[i].speed;
-                    obj[i].previousDirection = 'right';
+                    if(!collision(obj[i].x + obj[i].speed, obj[i].y, map)){
+                    obj[i].x += obj[i].speed * 3;
+                    if(collision(obj[i].x + obj[i].speed, obj[i].y, map)){
+                        obj[i].random = 1;
+                    }
+                   
                     }
                     break;
                 default:
@@ -269,8 +299,44 @@ const drawEnemy = obj => {
                
                 }
             }
+                if(obj[i].mobType === 'up-down'){
+                
+                    
+                    if(obj[i].previousDirection === 'up' && !collision(obj[i].x, obj[i].y+1, map)){
+                    obj[i].y += obj[i].speed + 1;
+                        if(collision(obj[i].x, obj[i].y + 1, map)){
+                            obj[i].previousDirection = 'down';
+                        }
+                    }
+                    
+               
+                    if(obj[i].previousDirection === 'down' && !collision(obj[i].x, obj[i].y - 1, map)){
+                        obj[i].y -= obj[i].speed + 1;
+                        if(collision(obj[i].x, obj[i].y -1, map)){
+                    obj[i].previousDirection = 'up';
+
+                        }
+                    }
+                    
+                
+                }
+                if(!obj[i].currentAnimation){
+                    ctx.drawImage(bitMap, 25, 0, 8, 8, obj[i].x, obj[i].y, 8, 8);//need new image
+                } else if(obj[i].currentAnimation === 1){
+                    ctx.drawImage(bitMap, 32, 0, 8, 8, obj[i].x, obj[i].y, 8, 8);//need new image
+                }
+                if(obj[i].animationCounter >= 6){
+                    obj[i].currentAnimation++;
+                    obj[i].animationCounter = 0;
+                    if(obj[i].currentAnimation > 1){
+                        obj[i].currentAnimation = 0;
+                    }
+               
+                }
+            }
+
             //End of blue slime AI
-        }if(gameObjects[i].isText){
+        if(gameObjects[i].isText){
             ctx.fillStyle = "white";
             ctx.font = "12px Arial";
             ctx.fillText(gameObjects[i].line, gameObjects[i].x, gameObjects[i].y)
@@ -279,6 +345,7 @@ const drawEnemy = obj => {
         
     }
 }
+
 
 const drawMap = level => {
     // console.log(level.length)
@@ -323,7 +390,7 @@ const drawProjectiles = (obj) => {
 const projectileCollision = (projectile) => {
 
         for(let i = 0; i < gameObjects.length; i++){
-            if(projectile.x >= gameObjects[i].x - 5 && projectile.x <= gameObjects[i].x + 5 && projectile.y >= gameObjects[i].y - 4 && projectile.y <= gameObjects[i].y + 5 && gameObjects[i].health > 0){
+            if(projectile.x >= gameObjects[i].x - 5 && projectile.x <= gameObjects[i].x + 5 && projectile.y >= gameObjects[i].y - 8 && projectile.y <= gameObjects[i].y + 2 && gameObjects[i].health > 0){
                 gameObjects[i].health -= projectile.damage;
                 console.log(gameObjects[i].health);
                 if(!gameObjects[i].health){
@@ -357,7 +424,8 @@ const objectCollision = () => {
                     }, gameObjects[k].selfStun);
                     stunTimer = gameObjects[k].stunLength;
                     playerHealth--;
-                    console.log(playerHealth)
+                    goobyX = gameObjects[k].onHitLocationX;
+                    goobyY = gameObjects[k].onHitLocationY;
                     }
 
             }if(gameObjects[k].isZone){
