@@ -32,13 +32,13 @@ let projY = goobyY;
 let currentAnimation = 0;
 let animationCounter = 0;
 let cdTimer = 0;
-let cdDefault = 30;
+let cdDefault = 10;
 let buffs = 0;
 let gameMaps = []; 
 let projectiles = [];
+let enemyProj = []
 let tempObject = null;
 let goobyEXP = 0;
-let goobyHealth = 4; 
 let stunTimer = 0;
 let goobyRange = 15;
 let jumpTimer = true;
@@ -51,6 +51,7 @@ let isStunned = false;
 let healthX = 0;
 let healthY = 8;
 let playerHealth = 3;
+
 
 class DefaultObject {
     constructor(x, y, width, height){
@@ -71,7 +72,7 @@ class Projectile extends DefaultObject{
     }
 }
 class Enemy extends DefaultObject{
-    constructor(x, y, width, height, mobType, speed, onHitLocationX, onHitLocationY, health){
+    constructor(x, y, width, height, mobType, speed, onHitLocationX, onHitLocationY){
         super(x, y, width, height);
         this.mobType = mobType;
         this.speed = speed;
@@ -87,6 +88,7 @@ class Enemy extends DefaultObject{
         this.expValue = 1;
         this.enemy = true;
         this.text = false;
+        this.coolDown = 15;
     }
     movementGenerator() {
         setInterval(() => {
@@ -164,7 +166,8 @@ const objectsTileSet1 = [];
 tempObject = new Enemy(112, 32, 8, 8, 'blueSlime', 0.1, 9, 140, 2);
 tempObject.movementGenerator();
 objectsTileSet1.push(tempObject);
-tempObject = new Enemy(8, 16, 8, 8, "left-right", 0.1, 9, 140, 1);
+tempObject = new Enemy(8, 24, 8, 8, "left-right", 0.1, 9, 140, 1);
+tempObject.previousDirection = 'left';
 tempObject.movementGenerator();
 objectsTileSet1.push(tempObject);
 tempObject = new Enemy(100, 88, 8, 8, "blueSlime", 0.1, 9, 140, 1);
@@ -183,14 +186,14 @@ tempObject = new Enemy(40, 40, 8, 8, "up-down", 0.1, 9, 140, 1);
 tempObject.health = 100000000;
 objectsTileSet1.push(tempObject);
 //////////////mobs^
-tempObject = new Zone(112, 32, 8, 8, 1, 8, 82);
+tempObject = new Zone(112, 32, 8, 8, 1, 112, 32);
 objectsTileSet1.push(tempObject);
 tempObject = new Zone(6, 10, 8, 8, 1, 8, 82);
 objectsTileSet1.push(tempObject);
 ///////////// portals^
-tempObject = new Text(100, 10, 0, 0, 'LEVEL: 1');
+tempObject = new Text(105, 10, 0, 0, 'LEVEL: 1');
 objectsTileSet1.push(tempObject);
-tempObject = new Text(100, 10, 0, 0, 'LEVEL: 1');
+tempObject = new Text(105, 10, 0, 0, 'LEVEL: 1');
 objectsTileSet1.push(tempObject);
 /////////text display^
 let bundle = new MapBundler(objectsTileSet1, tileSet1);
@@ -202,8 +205,8 @@ const tileSet2 = [
     [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 9],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
@@ -219,7 +222,16 @@ const tileSet2 = [
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9]]
 const objectsTileSet2 = [];
-
+tempObject = new Enemy(110, 120, 8, 8, "cannon", 2, 112, 32);
+tempObject.health = 100000;
+tempObject.previousDirection = 'left'
+objectsTileSet2.push(tempObject);
+tempObject = new Zone(9, 140, 8, 8, 1, 112, 32);
+objectsTileSet2.push(tempObject);
+tempObject = new Text(105, 10, 0, 0, 'LEVEL: 2');
+objectsTileSet2.push(tempObject);
+tempObject = new Text(105, 10, 0, 0, 'LEVEL: 2');
+objectsTileSet2.push(tempObject);
 bundle = new MapBundler(objectsTileSet2, tileSet2);
 gameMaps.push(bundle);
 
@@ -247,8 +259,8 @@ gameMaps.push(bundle);
 
 
 //sets starting zone
-let map = gameMaps[0].map;
-gameObjects = gameMaps[0].gameObject;
+let map = gameMaps[1].map;
+gameObjects = gameMaps[1].gameObject;
 console.log(gameObjects);
 
 //consider something to create an agro radius, something like monsterx - goobyx < certain number?
@@ -260,7 +272,7 @@ const drawEnemy = obj => {
             obj[i].animationCounter += obj[i].speed;
             
             if(obj[i].mobType === 'blueSlime'){
-                if(!collision(obj[i].x, obj[i].y + 1, map)){
+                if(!collision(obj[i].x, obj[i].y + 3, map)){
                     obj[i].y += obj[i].speed +1;
         
                     }
@@ -268,24 +280,19 @@ const drawEnemy = obj => {
                 switch(obj[i].random){
                 case 1:
                     if(!collision(obj[i].x  - obj[i].speed, obj[i].y, map)){
-                    obj[i].x -= obj[i].speed* 3;
-                    if(collision(obj[i].x - obj[i].speed, obj[i].y, map)){
-                        obj[i].random = 2;
-                    }
-                    console.log('incase1')
+                        obj[i].x -= obj[i].speed* 3;
+                        if(collision(obj[i].x - obj[i].speed, obj[i].y, map)){
+                            obj[i].random = 2;
+                        }
                     }
                     break;
                 case 2:
                     if(!collision(obj[i].x + obj[i].speed, obj[i].y, map)){
-                    obj[i].x += obj[i].speed * 3;
-                    if(collision(obj[i].x + obj[i].speed, obj[i].y, map)){
-                        obj[i].random = 1;
+                        obj[i].x += obj[i].speed * 3;
+                        if(collision(obj[i].x + obj[i].speed, obj[i].y, map)){
+                            obj[i].random = 1;
+                        }
                     }
-                   
-                    }
-                    break;
-                default:
-                    //jump
                     break;
                 }
 
@@ -322,11 +329,39 @@ const drawEnemy = obj => {
                         }
                     }                                 
                     
-                ctx.drawImage(jumper, 8, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);//need new image
+                    ctx.drawImage(jumper, 8, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);//need new image
                 }
+                if(obj[i].mobType === 'left-right'){
+                    
+                    if(obj[i].previousDirection === 'left' && !collision(obj[i].x + 1, obj[i].y, map)){
+                        obj[i].x += obj[i].speed + 2;
+                            if(collision(obj[i].x + 5, obj[i].y, map)){
+                                obj[i].previousDirection = 'right';
+                        }
+                    }
+                    else if(obj[i].previousDirection === 'right' && !collision(obj[i].x - 2, obj[i].y, map)){
+                        obj[i].x -= obj[i].speed + 2;
+                            if(collision(obj[i].x - 2, obj[i].y, map)){
+                            obj[i].previousDirection = 'left';
+                        }
+                    }
                 
                     
-                
+                    ctx.drawImage(jumper, 8, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);//need new image
+                }
+
+                if(obj[i].mobType === 'cannon'){
+                    enemyProjectileDrawing(enemyProj)
+                    obj[i].coolDown--;
+                    ctx.drawImage(jumper, 16, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);
+                    if(obj[i].coolDown < 0){            
+                        let fireBall = new Projectile(obj[i].x - 6, obj[i].y - 4, 8, 8, 2, obj[i].previousDirection, 'cannon');
+                        fireBall.onHitLocationX = obj[i].onHitLocationX;
+                        fireBall.onHitLocationY = obj[i].onHitLocationY;
+                        enemyProj.push(fireBall);
+                        obj[i].coolDown = 30;
+                    }
+                }
             }
 
             //End of blue slime AI
@@ -358,39 +393,57 @@ const drawProjectiles = (obj) => {
         if(obj[i].projectileSource === "gooby"){
                 if(obj[i].direction === 'up' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){  //add object collison conditional !projectileCollision(obj[i], gameObjects);            
                 obj[i].y -= obj[i].projSpeed;
-                ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);    
+                ctx.drawImage(jumper, 0, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);    
                 }
                 if(obj[i].direction === 'right' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){
                 obj[i].x+=obj[i].projSpeed;
-                ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y + 4, 8, 8);
+                ctx.drawImage(jumper, 0, 8, 8, 8, obj[i].x, obj[i].y + 4, 8, 8);
                 }
                 if(obj[i].direction === 'down' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){
                 obj[i].y += obj[i].projSpeed;
-                ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);//same with this
+                ctx.drawImage(bitMap, 0, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);//same with this
                 }
                 if(obj[i].direction === 'left' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){
                 obj[i].x -= obj[i].projSpeed;
-                ctx.drawImage(bitMap, 48, 8, 8, 8, obj[i].x, obj[i].y + 4, 8, 8);
+                ctx.drawImage(jumper, 0, 8, 8, 8, obj[i].x, obj[i].y + 4, 8, 8);
                 } 
                 if(collision(obj[i].x, obj[i].y, map) || projectileCollision(obj[i]) || obj[i].distance >= goobyRange){
-                    if(obj[i].health<0){
-                        console.log(obj[i].health)
                     obj.shift();
-                    }
+                    
                 }
                 
             }
             //add if here
+     
         }   
     }
+    const enemyProjectileDrawing= (obj) => {
+        for(let i = 0; i < obj.length; i++){
+        if(obj[i].direction === 'right' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){
+            obj[i].x+=obj[i].projSpeed;
+            ctx.drawImage(jumper, 40, 0, 8, 8, obj[i].x, obj[i].y + 4, 8, 8);
+            }
+            if(obj[i].direction === 'left' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){
+            obj[i].x -= obj[i].projSpeed;
+            ctx.drawImage(jumper, 32, 0, 8, 8, obj[i].x, obj[i].y + 4, 8, 8);
+            } 
+            
+                if(obj[i].x>= goobyX && obj[i].x<= goobyX + 4  && obj[i].y >= goobyY - 12 && obj[i].y <= goobyY + 4){
+                    goobyX = obj[i].onHitLocationX;
+                    goobyY = obj[i].onHitLocationY;
+                    obj.shift();
+                    playerHealth --;
+                }
+            }
+} 
 
 const projectileCollision = (projectile) => {
 
         for(let i = 0; i < gameObjects.length; i++){
-            if(projectile.x >= gameObjects[i].x - 5 && projectile.x <= gameObjects[i].x + 5 && projectile.y >= gameObjects[i].y - 8 && projectile.y <= gameObjects[i].y + 2 && gameObjects[i].health > 0){
+            if(projectile.x >= gameObjects[i].x - 5 && projectile.x <= gameObjects[i].x + gameObjects[i].width && projectile.y >= gameObjects[i].y - 8 && projectile.y <= gameObjects[i].y + gameObjects[i].height && gameObjects[i].health > 0){
                 gameObjects[i].health -= projectile.damage;
-                console.log(gameObjects[i].health);
-                if(!gameObjects[i].health){
+                
+                if(gameObjects[i].health<= 0){
                     goobyEXP+= gameObjects[i].expValue;
                 }
                 return true;
@@ -409,7 +462,6 @@ const objectCollision = () => {
         for(let k = 0; k < gameObjects.length; k++){
                         
             if(goobyX >= gameObjects[k].x - 4 && goobyX <= gameObjects[k].x + 4 && goobyY >= gameObjects[k].y -4 && goobyY <= gameObjects[k].y + 4 && gameObjects[k].health > 0){
-                console.log('in enemy')
                 if(gameObjects[k].enemy && !iFrames){
                     iFrames = true;
                     setTimeout(() => {
@@ -422,7 +474,7 @@ const objectCollision = () => {
 
             }if(gameObjects[k].isZone){
                 ctx.drawImage(jumper, 56, 0, 8, 8, gameObjects[k].x, gameObjects[k].y, 8, 8);
-                if(goobyX >= gameObjects[k].x  && goobyX <= gameObjects[k].x + 2 && goobyY >= gameObjects[k].y  && goobyY <= gameObjects[k].y + 8){
+                if(goobyX >= gameObjects[k].x  && goobyX <= gameObjects[k].x + 8 && goobyY >= gameObjects[k].y  && goobyY <= gameObjects[k].y + 8){
                 goobyX = gameObjects[k].newZoneStartX;
                 goobyY = gameObjects[k].newZoneStartY;
                 map = gameMaps[gameObjects[k].newZoneNumber].map;
