@@ -164,7 +164,7 @@ const objectsTileSet1 = [];
 tempObject = new Enemy(112, 32, 8, 8, 'blueSlime', 0.1, 9, 140, 2);
 tempObject.movementGenerator();
 objectsTileSet1.push(tempObject);
-tempObject = new Enemy(8, 16, 8, 8, "up-down", 0.1, 9, 140, 1);
+tempObject = new Enemy(8, 16, 8, 8, "left-right", 0.1, 9, 140, 1);
 tempObject.movementGenerator();
 objectsTileSet1.push(tempObject);
 tempObject = new Enemy(100, 88, 8, 8, "blueSlime", 0.1, 9, 140, 1);
@@ -482,8 +482,8 @@ const drawGooby = () => {
     }if(!collision(goobyX, goobyY+1, map)){
         canJump = false;
 
-    }if(collision(goobyX, goobyY + 1, map) && !canJump){
-        goobyY-=2;
+    }if(collision(goobyX, goobyY + 2, map) && !canJump){
+        goobyY-=1.5;
         canJump = true;
         currentAnimation = 0;
 
@@ -491,7 +491,7 @@ const drawGooby = () => {
         goobyY += jump * 1.5;
 
     }if(rightPressed){
-        if(!collision(goobyX + 1, goobyY, map)){
+        if(!collision(goobyX + 2, goobyY, map)){
         goobyX += walk;
 
         }if(airBourne && collision(goobyX + 1, goobyY, map)){
@@ -510,16 +510,13 @@ const drawGooby = () => {
 
     }if(rightPressed){
         if(currentAnimation === 0){
-            // ctx.drawImage(updatedRight, 206, 0, 64, 40, goobyX, goobyY, 64, 40);
-            ctx.drawImage(jumper, 0, 0, 8, 8, goobyX, goobyY, 8, 8);
+            ctx.drawImage(jumper, 0, 0, 8, 8, goobyX, goobyY, 6, 6);
 
         }else if(currentAnimation === 1){
-            // ctx.drawImage(updatedRight, 141, 0, 64, 40, goobyX, goobyY, 64, 40);
-            ctx.drawImage(jumper, 0, 0, 8, 8, goobyX, goobyY, 8, 8);
+            ctx.drawImage(jumper, 0, 0, 8, 8, goobyX, goobyY, 6, 6);
 
         }else if( currentAnimation === 2){
-            // ctx.drawImage(updatedRight, 76, 0, 64, 40, goobyX, goobyY, 64, 40);
-            ctx.drawImage(jumper, 0, 0, 8, 8, goobyX, goobyY, 8, 8);
+            ctx.drawImage(jumper, 0, 0, 8, 8, goobyX, goobyY, 6, 6);
 
             
         }
@@ -533,14 +530,11 @@ const drawGooby = () => {
 
     }if(leftPressed){
         if(currentAnimation === 0){
-            // ctx.drawImage(updated, 0, 0, 58, 40, goobyX, goobyY, 64, 40);
-            ctx.drawImage(jumper, 8, 0, 8, 8, goobyX, goobyY, 8, 8);
+            ctx.drawImage(jumper, 8, 0, 8, 8, goobyX, goobyY, 6, 6);
         }else if(currentAnimation === 1){
-            // ctx.drawImage(updated, 64, 0, 58, 40, goobyX, goobyY, 64, 40);
-            ctx.drawImage(jumper, 8, 0, 8, 8, goobyX, goobyY, 8, 8);
+            ctx.drawImage(jumper, 8, 0, 8, 8, goobyX, goobyY, 6, 6);
         }else if( currentAnimation === 2){
-            // ctx.drawImage(updated, 128, 0, 64, 40, goobyX, goobyY, 64, 40);
-            ctx.drawImage(jumper, 8, 0, 8, 8, goobyX, goobyY, 8, 8);
+            ctx.drawImage(jumper, 8, 0, 8, 8, goobyX, goobyY, 6, 6);
             
         }
         if(animationCounter >= 12){
@@ -553,24 +547,20 @@ const drawGooby = () => {
     }if(currentAnimation === 3){
         switch(lastButtonPressed){
             case "right":
-            // ctx.drawImage(updatedRight, 192, 42, 64, 40, goobyX - 10, goobyY +2, 64, 40);
-            ctx.drawImage(jumper, 24, 0, 8, 8, goobyX, goobyY, 8, 8);
+            ctx.drawImage(jumper, 0, 0, 8, 8, goobyX, goobyY, 6, 6);
             break;
             case "left":
-                // ctx.drawImage(updated, 0, 42, 64, 40, goobyX + 10, goobyY + 2, 64, 40);
-                ctx.drawImage(jumper, 16, 0, 8, 8, goobyX, goobyY, 8, 8);
+                ctx.drawImage(jumper, 8, 0, 8, 8, goobyX, goobyY, 6, 6);
                 break;
         }   
 
     }else if(!rightPressed && !leftPressed) {
         switch(lastButtonPressed){
             case "right":
-            // ctx.drawImage(updatedRight, 200, 0, 64, 40, goobyX, goobyY, 64, 40);
-            ctx.drawImage(jumper, 0, 0, 8, 8, goobyX+1, goobyY, 8, 8);
+            ctx.drawImage(jumper, 0, 0, 8, 8, goobyX+1, goobyY, 6, 6);
             break;
             case "left":
-                // ctx.drawImage(updated, 0, 0, 64, 40, goobyX, goobyY, 64, 40);
-                ctx.drawImage(jumper, 8, 0, 8, 8, goobyX, goobyY, 8, 8);
+                ctx.drawImage(jumper, 8, 0, 8, 8, goobyX, goobyY, 6, 6);
                 break;
         }
     }
@@ -779,7 +769,7 @@ const drawGooby = () => {
                 for(let j = 0; j < map[i].length; j++){
                     
                     if(map[i][j] != 0){                  
-                         if(x <= j*8+6 && x >= j*8-4 && y <= i*8+6 && y >= i*8-7){
+                         if(x <= j*8+6 && x >= j*8-4 && y <= i*8+4 && y >= i*8-4){
                             // (x <= j*8 && x >= j*64 && y <= i*40 + 40 && y >= i*40)
                             return true;
                         }
