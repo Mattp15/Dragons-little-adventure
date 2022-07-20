@@ -2,7 +2,7 @@ const canvas = document.getElementById("myCanvas");
 document.body.style.backgroundColor = "rgba(0, 0, 0, 0.9)";
 let ctx = canvas.getContext("2d");
 document.body.style.zoom = "500%";
-const fps = 60;
+let fps = 60;
 const background = new Image();
 background.src = "images/background.png"
 const bitMap = new Image();
@@ -144,7 +144,7 @@ const tileSet1 = [
     [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 9],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 9],
-    [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 0, 1, 1, 1, 1, 9],
+    [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 9],
     [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 9],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 9],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 9],
@@ -183,14 +183,14 @@ tempObject = new Enemy(40, 40, 8, 8, "up-down", 0.1, 9, 140, 1);
 tempObject.health = 100000000;
 objectsTileSet1.push(tempObject);
 //////////////mobs^
-tempObject = new Zone(112, 36, 8, 8, 1, 8, 82);
+tempObject = new Zone(112, 32, 8, 8, 1, 8, 82);
 objectsTileSet1.push(tempObject);
 tempObject = new Zone(6, 10, 8, 8, 1, 8, 82);
 objectsTileSet1.push(tempObject);
 ///////////// portals^
-tempObject = new Text(200, 10, 0, 0, 'LEVEL: 1');
+tempObject = new Text(100, 10, 0, 0, 'LEVEL: 1');
 objectsTileSet1.push(tempObject);
-tempObject = new Text(200, 10, 0, 0, 'LEVEL: 1');
+tempObject = new Text(100, 10, 0, 0, 'LEVEL: 1');
 objectsTileSet1.push(tempObject);
 /////////text display^
 let bundle = new MapBundler(objectsTileSet1, tileSet1);
@@ -415,18 +415,13 @@ const objectCollision = () => {
                     setTimeout(() => {
                         iFrames = false;
                     },gameObjects[k].stunLength + 3000);
-                    gameObjects[k].isStunned = true;
-                    setTimeout(() => {
-                        gameObjects[k].isStunned = false;
-                    }, gameObjects[k].selfStun);
-                    stunTimer = gameObjects[k].stunLength;
                     playerHealth--;
                     goobyX = gameObjects[k].onHitLocationX;
                     goobyY = gameObjects[k].onHitLocationY;
                     }
 
             }if(gameObjects[k].isZone){
-                // ctx.drawImage(bitMap, 0, 8, 8, 8, gameObjects[k].x, gameObjects[k].y, 8, 8);
+                ctx.drawImage(jumper, 56, 0, 8, 8, gameObjects[k].x, gameObjects[k].y, 8, 8);
                 if(goobyX >= gameObjects[k].x  && goobyX <= gameObjects[k].x + 2 && goobyY >= gameObjects[k].y  && goobyY <= gameObjects[k].y + 8){
                 goobyX = gameObjects[k].newZoneStartX;
                 goobyY = gameObjects[k].newZoneStartY;
@@ -473,7 +468,7 @@ const drawGooby = () => {
         }   
         cdTimer = 0;
         console.log(fireDirection)
-    }if(collision(goobyX+2, goobyY - 1, map)){
+    }if(collision(goobyX, goobyY - 1, map)){
         airBourne = false;
         
 
@@ -771,6 +766,13 @@ const drawGooby = () => {
                 shiftPressed = false;
             }
         }
+        /////DeathCheck
+        const isDead = () => {
+            if(!playerHealth){
+                return true;
+            }
+            return false;
+        }
 //////////////////////////////////////////////////////////////////////////////////
         const collision = (x, y, map) => {
             for(let i = 0; i < map.length; i++){
@@ -790,6 +792,27 @@ const drawGooby = () => {
         setInterval(() => {
             stunTimer--;
         }, 500);
+        const deathArray = [
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9]]
 const draw = () => {
     setTimeout(()=> {
     ctx.fillStyle = "rgb(20,20,20)";
@@ -799,6 +822,14 @@ const draw = () => {
     objectCollision();
     drawProjectiles(projectiles);
     drawEnemy(gameObjects);
+    if(isDead()){
+        map = deathArray;
+        let deathText = new Text(40, 40, 0, 0, "YOU DIED!")
+        gameObjects.push(deathText);
+        setTimeout(() => {
+        fps = 0.0001
+        }, 3000)
+    };
     requestAnimationFrame(draw);
     },1000 / fps);
 }
