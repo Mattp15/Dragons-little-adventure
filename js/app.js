@@ -259,8 +259,8 @@ gameMaps.push(bundle);
 
 
 //sets starting zone
-let map = gameMaps[1].map;
-gameObjects = gameMaps[1].gameObject;
+let map = gameMaps[0].map;
+gameObjects = gameMaps[0].gameObject;
 console.log(gameObjects);
 
 //consider something to create an agro radius, something like monsterx - goobyx < certain number?
@@ -456,7 +456,7 @@ const objectCollision = () => {
 
    let playerIndex = gameObjects.indexOf(playerText)
     gameObjects.splice(playerIndex, 1)
-    if(!gameObjects.includes(playerText)){
+    if(!gameObjects.includes(playerText) && playerHealth > 0){
         gameObjects.push(playerText = new Text(0, 10, 0, 0, `LIVESx ${playerHealth}`));
     }
         for(let k = 0; k < gameObjects.length; k++){
@@ -616,145 +616,10 @@ const drawGooby = () => {
                 break;
         }
     }
-   /*
-    if(spaceBarPressed && !collision(goobyX, goobyY - walk, map) && jumpTimer && stunTimer <= 0){
-       walk = 1;
-       if(collision(goobyX, goobyY - 2, map)){
-        spaceBarPressed = false;
-       }
-       else{
-        setTimeout(() => {
-            spaceBarPressed = false;
-        }, 400)
-        }
-
-            
-        if(!rightPressed && !leftPressed){
-            goobyY -= walk;
-            ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);//need new image
-        } else if(rightPressed && !collision(goobyX + 1, goobyY, map)){
-
-            goobyY -= walk;
-            goobyX += walk/2;
-            ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);//need new image
-        } else if(leftPressed && !collision(goobyX - 1, goobyY, map)){
-            goobyY -= walk;
-            goobyX -= walk/2;
-            ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);//need new image
-        } else{
-            goobyY -= walk;
-            ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);//need new image
-        }
-               
-        } else if(!spaceBarPressed && !collision(goobyX, goobyY + 1, map)){
-        //     if(collision(goobyX + 1, goobyY, map) || collision(goobyX -1, goobyY, map)){
-        //     goobyY +=walk/2;
-        //     ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);             
-        // }
-            if(!rightPressed && !leftPressed){
-            goobyY += walk;
-        } else if(rightPressed && !collision(goobyX + 1, goobyY, map)){
-
-            goobyY += walk;
-            goobyX += walk/2;
-            ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);//need new image
-        } else if(leftPressed && !collision(goobyX - 1, goobyY, map)){
-            goobyY += walk;
-            goobyX -= walk/2;
-            ctx.drawImage(gooby, 32, 0, 8, 8, goobyX, goobyY, 8, 8);//need new image
-        } 
-    }   else if(upPressed && !collision(goobyX, goobyY - walk, map) && stunTimer <= 0){
-        if(currentAnimation === 0){
-            //need looking up image
-        }
-    }  else if(rightPressed){
-        if(!collision(goobyX + walk, goobyY, map) && stunTimer <= 0){
-        goobyX += walk;
-        if(currentAnimation === 0){
-            ctx.drawImage(gooby, 16, 0, 8, 8, goobyX, goobyY, 8, 8);//need new image
-        }else if(currentAnimation === 1){
-            ctx.drawImage(gooby, 22, 0, 8, 8, goobyX, goobyY, 8, 8);//newed new image
-        }
-        if(animationCounter >= 6){
-            currentAnimation++;
-            animationCounter = 0;
-            if(currentAnimation > 1){
-                currentAnimation = 0;
-            }
-        }
-        }
-        else{
-            if(currentAnimation === 0){
-                ctx.drawImage(gooby, 16, 0, 8, 8, goobyX, goobyY, 8, 8);//need new image
-            }else if(currentAnimation === 1){
-                ctx.drawImage(gooby, 22, 0, 8, 8, goobyX, goobyY, 8, 8);//newed new image
-            }
-            if(animationCounter >= 6){
-                currentAnimation++;
-                animationCounter = 0;
-                if(currentAnimation > 1){
-                    currentAnimation = 0;
-                }
-            }
-        }
-     } else if(leftPressed){
-          if(!collision(goobyX - walk, goobyY, map) && stunTimer <= 0){
-            goobyX -= walk;
-            if(currentAnimation === 0){
-            ctx.drawImage(gooby, 50, 0, 8, 8, goobyX, goobyY, 8, 8);//need new image
-            }else if(currentAnimation === 1){
-            ctx.drawImage(gooby, 58, 0, 8, 8, goobyX, goobyY, 8, 8);//need new image
-            }
-            if(animationCounter >= 6){
-                currentAnimation++;
-                animationCounter = 0;
-                if(currentAnimation > 1){
-                    currentAnimation = 0;
-                }
-            }
-        }   
-        else{
-            if(currentAnimation === 0){
-                ctx.drawImage(gooby, 50, 0, 8, 8, goobyX, goobyY, 8, 8);//need new image
-                }else if(currentAnimation === 1){
-                ctx.drawImage(gooby, 58, 0, 8, 8, goobyX, goobyY, 8, 8);//need new image
-                }
-                if(animationCounter >= 6){
-                    currentAnimation++;
-                    animationCounter = 0;
-                    if(currentAnimation > 1){
-                        currentAnimation = 0;
-                    }
-                }
-        }
-    
-    }   
-    if(leftPressed && collision(goobyX - walk, goobyY, map) && !collision(goobyX, goobyY + 1, map)){
-        if(!spaceBarPressed) {
-            
-            goobyY += 1;
-            ctx.drawImage(gooby, 58, 0, 8, 8, goobyX, goobyY, 8, 8);
-        }
-        }  if(rightPressed && collision(goobyX + 1, goobyY, map) && !collision(goobyX, goobyY + 1, map)){
-
-            if(!spaceBarPressed) {
-            goobyY += 1;
-            ctx.drawImage(gooby, 58, 0, 8, 8, goobyX, goobyY, 8, 8);
-            }
-
-        }
-        else if(!rightPressed && !leftPressed && !spaceBarPressed && !upPressed && !downPressed){
-            ctx.drawImage(gooby, 58, 0, 8, 8, goobyX, goobyY, 8, 8);
-        }
-     
-    if(collision(goobyX, goobyY + 1.5, map)){
-        jumpTimer = true;
-        jumpCount = 1;
-    }*/
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////End Character Drawing
 
-///audioHandler
+
 
 
 
@@ -865,8 +730,13 @@ const draw = () => {
     drawProjectiles(projectiles);
     drawEnemy(gameObjects);
     if(isDead()){
+        for(let i = 0; i < gameObjects.length; i++){
+            gameObjects.shift();
+        };
         map = deathArray;
         let deathText = new Text(40, 40, 0, 0, "YOU DIED!")
+        gameObjects.push(deathText);
+        deathText = new Text(40, 40, 0, 0, "YOU DIED!")
         gameObjects.push(deathText);
         setTimeout(() => {
         fps = 0.0001
@@ -880,19 +750,24 @@ document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
 /*blank level template
     [
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9]]
     */
