@@ -1,7 +1,7 @@
 const canvas = document.getElementById("myCanvas");
 document.body.style.backgroundColor = "rgba(0, 0, 0, 0.9)";
 let ctx = canvas.getContext("2d");
-document.body.style.zoom = "500%";
+document.body.style.zoom = "575%";
 let fps = 60;
 const background = new Image();
 background.src = "images/background.png"
@@ -27,8 +27,6 @@ let spaceBarPressed = false;
 let shiftPressed = false;
 let goobyX = 9;
 let goobyY = 140;
-let projX = goobyX;
-let projY = goobyY;
 let currentAnimation = 0;
 let animationCounter = 0;
 let cdTimer = 0;
@@ -272,7 +270,7 @@ const drawEnemy = obj => {
                     ctx.drawImage(bitMap, 25, 0, 8, 8, obj[i].x, obj[i].y, 8, 8);
 
                 }else if(obj[i].currentAnimation === 1){
-                    ctx.drawImage(bitMap, 32, 0, 8, 8, obj[i].x, obj[i].y, 8, 8);
+                    ctx.drawImage(bitMap, 32, 0, 8, 7, obj[i].x, obj[i].y, 8, 8);
 
                 }if(obj[i].animationCounter >= 6){
                     obj[i].currentAnimation++;
@@ -297,7 +295,7 @@ const drawEnemy = obj => {
                         }
                     }                                 
                     
-                    ctx.drawImage(jumper, 8, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);//need new image
+                    ctx.drawImage(jumper, 8, 8.5, 8, 8, obj[i].x, obj[i].y, 8, 8);//need new image
 
                 }if(obj[i].mobType === 'left-right'){                
                     if(obj[i].previousDirection === 'left' && !collision(obj[i].x + 1, obj[i].y, map)){
@@ -673,14 +671,16 @@ const draw = () => {
     objectCollision();
     drawProjectiles(projectiles);
     drawEnemy(gameObjects);
-    if(isDead()){
+    if(isDead()){//death
         for(let i = 0; i < gameObjects.length; i++){
             gameObjects.shift();
         };
         map = deathArray;
-        let deathText = new Text(40, 40, 0, 0, "YOU DIED!")
+        goobyX = -100;
+        goobyY = 0;
+        let deathText = new Text(50, 60, 0, 0, "YOU DIED!")
         gameObjects.push(deathText);
-        deathText = new Text(40, 40, 0, 0, "YOU DIED!")
+        deathText = new Text(50, 50, 0, 0, "YOU DIED!")
         gameObjects.push(deathText);
         setTimeout(() => {
         fps = 0.0001
