@@ -215,7 +215,7 @@ const tileSet2 = [
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9]]
 const objectsTileSet2 = [];
-tempObject = new Enemy(110, 120, 8, 8, "cannon", 2, 112, 32);
+tempObject = new Enemy(140, 120, 8, 8, "cannon", 2, 112, 32);
 tempObject.health = 100000;
 tempObject.previousDirection = 'left'
 objectsTileSet2.push(tempObject);
@@ -232,8 +232,8 @@ gameMaps.push(bundle);
 
 
 //sets starting zone
-let map = gameMaps[0].map;
-gameObjects = gameMaps[0].gameObject;
+let map = gameMaps[1].map;
+gameObjects = gameMaps[1].gameObject;
 console.log(gameObjects);
 
 //consider something to create an agro radius, something like monsterx - goobyx < certain number?
@@ -315,6 +315,7 @@ const drawEnemy = obj => {
 
                 if(obj[i].mobType === 'cannon'){
                     enemyProjectileDrawing(enemyProj)
+                    if(obj[i].previousDirection ==='left'){
                     obj[i].coolDown--;
                     ctx.drawImage(jumper, 16, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);
                     if(obj[i].coolDown < 0){            
@@ -325,21 +326,28 @@ const drawEnemy = obj => {
                         obj[i].coolDown = 30;
                     }
                 }
-        }
-            if(gameObjects[i].isText){
+            }
+    }
+        if(gameObjects[i].isText){
                 ctx.fillStyle = "white";
                 ctx.font = "12px Arial";
                 ctx.fillText(gameObjects[i].line, gameObjects[i].x, gameObjects[i].y)
-            }      
+        }      
     }
 }
 
 const drawMap = level => {//Draws the canvas
-    for(let i = 0; i < level.length; i++){
+    /*for(let i = 0; i < level.length; i++){
         for(let j = 0; j < level[i].length; j++){
             ctx.drawImage(bitMap, level[i][j]*8, 0, 8, 8, j*8, i*8, 8, 8);
         } 
-    }
+    }*/
+    level.forEach((element, i)=> {
+        element.forEach((secondElement, j)=>{
+            ctx.drawImage(bitMap, secondElement*8, 0, 8, 8, j*8, i*8, 8, 8);
+
+        })
+    })
 }
 
 const drawProjectiles = (obj) => {//Draws Player Projectiles
@@ -460,7 +468,7 @@ const drawGooby = () => {
         }   
         cdTimer = 0;
         console.log(fireDirection)
-    }if(collision(goobyX, goobyY - 1, map)){
+    }if(collision(goobyX, goobyY - 1.5, map)){
         airBourne = false;
         
 
@@ -474,9 +482,10 @@ const drawGooby = () => {
     }if(!collision(goobyX, goobyY+1, map)){
         canJump = false;
 
-    }if(collision(goobyX, goobyY + 2, map) && !canJump){
+    }if(collision(goobyX, goobyY + 2.2, map) && !canJump){
         goobyY-=1.5;
         canJump = true;
+        airBourne = false;
         currentAnimation = 0;
 
     }if(!airBourne && !collision(goobyX, goobyY + 1, map)){//Falling
@@ -610,7 +619,7 @@ const keyUpHandler = e => {
         currentAnimation = 0;
 
     }else if(e.keyCode === 32){//spacebar
-
+        spaceBarPressed = false;
     }else if(e.keyCode === 16){//leftshift
         shiftPressed = false;
     }
