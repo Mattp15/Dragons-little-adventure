@@ -238,26 +238,6 @@ gameMaps.push(bundle);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //sets starting zone
 let map = gameMaps[0].map;
 gameObjects = gameMaps[0].gameObject;
@@ -270,13 +250,11 @@ const drawEnemy = obj => {
     for(let i = 0; i < obj.length; i++){
         if(obj[i].enemy && obj[i].health>0){
             obj[i].animationCounter += obj[i].speed;
-            
             if(obj[i].mobType === 'blueSlime'){
                 if(!collision(obj[i].x, obj[i].y + 3, map)){
                     obj[i].y += obj[i].speed +1;
         
-                    }
-                
+                }
                 switch(obj[i].random){
                 case 1:
                     if(!collision(obj[i].x  - obj[i].speed, obj[i].y, map)){
@@ -294,34 +272,29 @@ const drawEnemy = obj => {
                         }
                     }
                     break;
-                }
 
-                if(!obj[i].currentAnimation){
-                    ctx.drawImage(bitMap, 25, 0, 8, 8, obj[i].x, obj[i].y, 8, 8);//need new image
-                } else if(obj[i].currentAnimation === 1){
-                    ctx.drawImage(bitMap, 32, 0, 8, 8, obj[i].x, obj[i].y, 8, 8);//need new image
-                }
-                if(obj[i].animationCounter >= 6){
+                }if(!obj[i].currentAnimation){
+                    ctx.drawImage(bitMap, 25, 0, 8, 8, obj[i].x, obj[i].y, 8, 8);
+
+                }else if(obj[i].currentAnimation === 1){
+                    ctx.drawImage(bitMap, 32, 0, 8, 8, obj[i].x, obj[i].y, 8, 8);
+
+                }if(obj[i].animationCounter >= 6){
                     obj[i].currentAnimation++;
                     obj[i].animationCounter = 0;
-                    if(obj[i].currentAnimation > 1){
-                        obj[i].currentAnimation = 0;
-                    }
-               
+                        if(obj[i].currentAnimation > 1){
+                            obj[i].currentAnimation = 0;
+                        }
                 }
             }
                 if(obj[i].mobType === 'up-down'){
-                
-                    
                     if(obj[i].previousDirection === 'up' && !collision(obj[i].x, obj[i].y+1, map)){
                     obj[i].y += obj[i].speed + 1;
                         if(collision(obj[i].x, obj[i].y + 1, map)){
                             obj[i].previousDirection = 'down';
                         }
-                    }
-                    
-               
-                    if(obj[i].previousDirection === 'down' && !collision(obj[i].x, obj[i].y - 1, map)){
+
+                    }if(obj[i].previousDirection === 'down' && !collision(obj[i].x, obj[i].y - 1, map)){
                         obj[i].y -= obj[i].speed + 1;
                         if(collision(obj[i].x, obj[i].y -1, map)){
                     obj[i].previousDirection = 'up';
@@ -330,23 +303,20 @@ const drawEnemy = obj => {
                     }                                 
                     
                     ctx.drawImage(jumper, 8, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);//need new image
-                }
-                if(obj[i].mobType === 'left-right'){
-                    
+
+                }if(obj[i].mobType === 'left-right'){                
                     if(obj[i].previousDirection === 'left' && !collision(obj[i].x + 1, obj[i].y, map)){
                         obj[i].x += obj[i].speed + 2;
                             if(collision(obj[i].x + 5, obj[i].y, map)){
                                 obj[i].previousDirection = 'right';
                         }
-                    }
-                    else if(obj[i].previousDirection === 'right' && !collision(obj[i].x - 2, obj[i].y, map)){
+
+                    }else if(obj[i].previousDirection === 'right' && !collision(obj[i].x - 2, obj[i].y, map)){
                         obj[i].x -= obj[i].speed + 2;
                             if(collision(obj[i].x - 2, obj[i].y, map)){
                             obj[i].previousDirection = 'left';
                         }
                     }
-                
-                    
                     ctx.drawImage(jumper, 8, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);//need new image
                 }
 
@@ -362,22 +332,16 @@ const drawEnemy = obj => {
                         obj[i].coolDown = 30;
                     }
                 }
-            }
-
-            //End of blue slime AI
-        if(gameObjects[i].isText){
-            ctx.fillStyle = "white";
-            ctx.font = "12px Arial";
-            ctx.fillText(gameObjects[i].line, gameObjects[i].x, gameObjects[i].y)
         }
-        
-        
+            if(gameObjects[i].isText){
+                ctx.fillStyle = "white";
+                ctx.font = "12px Arial";
+                ctx.fillText(gameObjects[i].line, gameObjects[i].x, gameObjects[i].y)
+            }      
     }
 }
 
-
-const drawMap = level => {
-    // console.log(level.length)
+const drawMap = level => {//Draws the canvas
     for(let i = 0; i < level.length; i++){
         for(let j = 0; j < level[i].length; j++){
             ctx.drawImage(bitMap, level[i][j]*8, 0, 8, 8, j*8, i*8, 8, 8);
@@ -385,56 +349,41 @@ const drawMap = level => {
     }
 }
 
-
-
-const drawProjectiles = (obj) => {
+const drawProjectiles = (obj) => {//Draws Player Projectiles
     for(let i = 0; i < obj.length; i++){
         obj[i].distance++;
-        if(obj[i].projectileSource === "gooby"){
-                if(obj[i].direction === 'up' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){  //add object collison conditional !projectileCollision(obj[i], gameObjects);            
-                obj[i].y -= obj[i].projSpeed;
-                ctx.drawImage(jumper, 0, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);    
-                }
-                if(obj[i].direction === 'right' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){
-                obj[i].x+=obj[i].projSpeed;
-                ctx.drawImage(jumper, 0, 8, 8, 8, obj[i].x, obj[i].y + 4, 8, 8);
-                }
-                if(obj[i].direction === 'down' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){
-                obj[i].y += obj[i].projSpeed;
-                ctx.drawImage(bitMap, 0, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);//same with this
-                }
-                if(obj[i].direction === 'left' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){
-                obj[i].x -= obj[i].projSpeed;
-                ctx.drawImage(jumper, 0, 8, 8, 8, obj[i].x, obj[i].y + 4, 8, 8);
-                } 
-                if(collision(obj[i].x, obj[i].y, map) || projectileCollision(obj[i]) || obj[i].distance >= goobyRange){
-                    obj.shift();
+        if(obj[i].direction === 'right' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){
+            obj[i].x+=obj[i].projSpeed;
+            ctx.drawImage(jumper, 0, 8, 8, 8, obj[i].x, obj[i].y + 4, 8, 8);
+
+        }if(obj[i].direction === 'left' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){
+            obj[i].x -= obj[i].projSpeed;
+            ctx.drawImage(jumper, 0, 8, 8, 8, obj[i].x, obj[i].y + 4, 8, 8);
+
+        }if(collision(obj[i].x, obj[i].y, map) || projectileCollision(obj[i]) || obj[i].distance >= goobyRange){
+            obj.shift();
                     
-                }
-                
-            }
-            //add if here
-     
-        }   
-    }
-    const enemyProjectileDrawing= (obj) => {
-        for(let i = 0; i < obj.length; i++){
+        }             
+    }    
+}   
+
+const enemyProjectileDrawing= (obj) => {//Draws Enemies Projectiles
+    for(let i = 0; i < obj.length; i++){
         if(obj[i].direction === 'right' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){
             obj[i].x+=obj[i].projSpeed;
             ctx.drawImage(jumper, 40, 0, 8, 8, obj[i].x, obj[i].y + 4, 8, 8);
-            }
-            if(obj[i].direction === 'left' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){
+
+        }if(obj[i].direction === 'left' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){
             obj[i].x -= obj[i].projSpeed;
             ctx.drawImage(jumper, 32, 0, 8, 8, obj[i].x, obj[i].y + 4, 8, 8);
-            } 
-            
-                if(obj[i].x>= goobyX && obj[i].x<= goobyX + 4  && obj[i].y >= goobyY - 12 && obj[i].y <= goobyY + 4){
-                    goobyX = obj[i].onHitLocationX;
-                    goobyY = obj[i].onHitLocationY;
-                    obj.shift();
-                    playerHealth --;
-                }
-            }
+
+        }if(obj[i].x>= goobyX && obj[i].x<= goobyX + 4  && obj[i].y >= goobyY - 12 && obj[i].y <= goobyY + 4){
+            goobyX = obj[i].onHitLocationX;
+            goobyY = obj[i].onHitLocationY;
+            obj.shift();
+            playerHealth --;
+        }
+    }
 } 
 
 const projectileCollision = (projectile) => {
@@ -453,37 +402,35 @@ const projectileCollision = (projectile) => {
 } 
 //notes for sidescroller transition > if(!spaceBarPressed && collision(x, y-1, map)) //if spacebarPressed = true && !collision(x, y -4, map) && !collision(x+1, y, map)>reduce velocity for rest of up //if !spaceBarPressed ** !collision(x, y-4, map), increase velocity, 
 const objectCollision = () => {
-
-   let playerIndex = gameObjects.indexOf(playerText)
-    gameObjects.splice(playerIndex, 1)
+let playerIndex = gameObjects.indexOf(playerText)
+gameObjects.splice(playerIndex, 1)
     if(!gameObjects.includes(playerText) && playerHealth > 0){
         gameObjects.push(playerText = new Text(0, 10, 0, 0, `LIVESx ${playerHealth}`));
     }
-        for(let k = 0; k < gameObjects.length; k++){
-                        
-            if(goobyX >= gameObjects[k].x - 4 && goobyX <= gameObjects[k].x + 4 && goobyY >= gameObjects[k].y -4 && goobyY <= gameObjects[k].y + 4 && gameObjects[k].health > 0){
-                if(gameObjects[k].enemy && !iFrames){
-                    iFrames = true;
-                    setTimeout(() => {
-                        iFrames = false;
-                    },gameObjects[k].stunLength + 3000);
-                    playerHealth--;
-                    goobyX = gameObjects[k].onHitLocationX;
-                    goobyY = gameObjects[k].onHitLocationY;
-                    }
+    for(let k = 0; k < gameObjects.length; k++){             
+        if(goobyX >= gameObjects[k].x - 4 && goobyX <= gameObjects[k].x + 4 && goobyY >= gameObjects[k].y -4 && goobyY <= gameObjects[k].y + 4 && gameObjects[k].health > 0){
+            if(gameObjects[k].enemy && !iFrames){
+                iFrames = true;
+                setTimeout(() => {
+                    iFrames = false;
+                },gameObjects[k].stunLength + 3000);
+                playerHealth--;
+                goobyX = gameObjects[k].onHitLocationX;
+                goobyY = gameObjects[k].onHitLocationY;
+            }
 
-            }if(gameObjects[k].isZone){
-                ctx.drawImage(jumper, 56, 0, 8, 8, gameObjects[k].x, gameObjects[k].y, 8, 8);
-                if(goobyX >= gameObjects[k].x  && goobyX <= gameObjects[k].x + 8 && goobyY >= gameObjects[k].y  && goobyY <= gameObjects[k].y + 8){
+        }if(gameObjects[k].isZone){
+            ctx.drawImage(jumper, 56, 0, 8, 8, gameObjects[k].x, gameObjects[k].y, 8, 8);
+            if(goobyX >= gameObjects[k].x  && goobyX <= gameObjects[k].x + 8 && goobyY >= gameObjects[k].y  && goobyY <= gameObjects[k].y + 8){
                 goobyX = gameObjects[k].newZoneStartX;
                 goobyY = gameObjects[k].newZoneStartY;
                 map = gameMaps[gameObjects[k].newZoneNumber].map;
                 gameObjects = gameMaps[gameObjects[k].newZoneNumber].gameObject;   
-                }
             }
-        }   
+        }
+    }   
     
-    }    
+}    
 
     
 
@@ -525,11 +472,11 @@ const drawGooby = () => {
         
 
    
-    }   if(airBourne){//going up
-            goobyY -= jump * 2;
-            setTimeout(()=>{
+    }if(airBourne){//going up
+        goobyY -= jump * 2;
+        setTimeout(()=>{
             airBourne = false;
-            }, 350);//Jumping time in air
+        }, 350);//Jumping time in air
     
     }if(!collision(goobyX, goobyY+1, map)){
         canJump = false;
@@ -549,8 +496,6 @@ const drawGooby = () => {
         }if(airBourne && collision(goobyX + 1, goobyY, map)){
             goobyY += walk * 0.75;//Reduces fallspeed/jumpspeed when pressing into walls
         }
-        //animationCounter++;
-        //add Animation incrementer in the left and right
 
     }if(leftPressed){
         if(!collision(goobyX - 1, goobyY, map)){
@@ -625,101 +570,105 @@ const drawGooby = () => {
 
 
         //Player input functions/////////////////////////////////////////////////////////////
-        const keyDownHandler = e => {
-            if(e.keyCode === 65){//left
-                leftPressed = true;
-                fireDirection = 'left'
-                lastButtonPressed = "left";
-            } else if(e.keyCode === 68){//right
-                rightPressed = true;
-                fireDirection = 'right'
-                lastButtonPressed = "right";
-            } else if(e.keyCode === 87){//up
-                upPressed = true;
-                fireDirection = 'up'
-                // lastButtonPressed = "up";
-            } else if(e.keyCode === 83){//down
-                downPressed = true;
-                // lastButtonPressed = "down";
-                fireDirection = 'down'
-            } else if(e.keyCode === 32 && !airBourne && canJump){//spacebar
-                canJump = false;
-                airBourne = true;
-                spaceBarPressed = true;
-                currentAnimation = 3;
+const keyDownHandler = e => {
+    if(e.keyCode === 65){//left
+        leftPressed = true;
+        fireDirection = 'left'
+        lastButtonPressed = "left";
 
-            } else if(e.keyCode === 16){//leftshift
+    }else if(e.keyCode === 68){//right
+        rightPressed = true;
+        fireDirection = 'right'
+        lastButtonPressed = "right";
 
-                
-                shiftPressed = true;
-            }
-        }
+    }else if(e.keyCode === 87){//up
+        upPressed = true;
+        fireDirection = 'up'
 
-        const keyUpHandler = e => {
-            if(e.keyCode === 65){//left
-                leftPressed = false;
-                currentAnimation = 0;
-            } else if(e.keyCode === 68){//right
-                rightPressed = false;
-                currentAnimation = 0;
-            } else if(e.keyCode === 87){//up
-                upPressed = false;         
-            } else if(e.keyCode === 83){//down
-                downPressed = false;  
-                currentAnimation = 0;
-            } else if(e.keyCode === 32){//spacebar
-                // spaceBarPressed = false;
-            } else if(e.keyCode === 16){//leftshift
-                shiftPressed = false;
-            }
-        }
+    }else if(e.keyCode === 83){//down
+        downPressed = true;
+        fireDirection = 'down'
+
+    }else if(e.keyCode === 32 && !airBourne && canJump){//spacebar
+        canJump = false;
+        airBourne = true;
+        spaceBarPressed = true;
+        currentAnimation = 3;
+
+    }else if(e.keyCode === 16){//leftshift
+        shiftPressed = true;
+    }
+}
+
+const keyUpHandler = e => {
+    if(e.keyCode === 65){//left
+        leftPressed = false;
+        currentAnimation = 0;
+
+    }else if(e.keyCode === 68){//right
+        rightPressed = false;
+        currentAnimation = 0;
+        
+    }else if(e.keyCode === 87){//up
+        upPressed = false; 
+
+    }else if(e.keyCode === 83){//down
+        downPressed = false;  
+        currentAnimation = 0;
+
+    }else if(e.keyCode === 32){//spacebar
+
+    }else if(e.keyCode === 16){//leftshift
+        shiftPressed = false;
+    }
+}
         /////DeathCheck
-        const isDead = () => {
-            if(!playerHealth){
-                return true;
-            }
-            return false;
-        }
+const isDead = () => {
+    if(!playerHealth){
+        return true;
+
+    }return false;
+}
 //////////////////////////////////////////////////////////////////////////////////
-        const collision = (x, y, map) => {
-            for(let i = 0; i < map.length; i++){
-                for(let j = 0; j < map[i].length; j++){
-                    
-                    if(map[i][j] != 0){                  
-                         if(x <= j*8+6 && x >= j*8-4 && y <= i*8+4 && y >= i*8-4){
-                            // (x <= j*8 && x >= j*64 && y <= i*40 + 40 && y >= i*40)
-                            return true;
-                        }
-                    }                 
+const collision = (x, y, map) => {
+    for(let i = 0; i < map.length; i++){
+        for(let j = 0; j < map[i].length; j++){                    
+            if(map[i][j] != 0){                  
+                 if(x <= j*8+6 && x >= j*8-4 && y <= i*8+4 && y >= i*8-4){
+                    return true;
                 }
-            }         
-            return false;
+            }                 
         }
 
-        setInterval(() => {
-            stunTimer--;
-        }, 500);
-        const deathArray = [
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9]]
+    }return false;
+}
+
+setInterval(() => {//starts cd timer for stuns/invulnerable time to prevent double hits on player
+    stunTimer--;
+}, 500);
+
+const deathArray = [
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9]]//Map for death screen
+
 const draw = () => {
     setTimeout(()=> {
     ctx.fillStyle = "rgb(20,20,20)";
@@ -749,25 +698,25 @@ draw();
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
 /*blank level template
-    [
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-            [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9]]
+[ 
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9]]
     */
