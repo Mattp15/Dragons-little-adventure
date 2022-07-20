@@ -130,14 +130,9 @@ class MapBundler{
     constructor(o, m){
     this.gameObject = o;
     this.map = m;
+    }
 }
-}
-//Interface handler///////////////////////////////////
 
-
-
-//Do interface drawing here also
-//textArray.push(interfaceDrawing);
 let playerText = new Text(0, 10, 0, 0, `LIVESx ${playerHealth}`);
 
 ////////////////////////////////////////////////////////////////zone1 20 rows, 25 collumns
