@@ -626,7 +626,7 @@ const isDead = () => {
 const collision = (x, y, map) => {
     for(let i = 0; i < map.length; i++){
         for(let j = 0; j < map[i].length; j++){                    
-            if(map[i][j] != 0){                  
+            if(map[i][j] != 0 && map[i][j] != 2){                  
                  if(x <= j*8+6 && x >= j*8-4 && y <= i*8+4 && y >= i*8-4){
                     return true;
                 }
