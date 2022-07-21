@@ -232,8 +232,8 @@ gameMaps.push(bundle);
 
 
 //sets starting zone
-let map = gameMaps[1].map;
-gameObjects = gameMaps[1].gameObject;
+let map = gameMaps[0].map;
+gameObjects = gameMaps[0].gameObject;
 console.log(gameObjects);
 
 //consider something to create an agro radius, something like monsterx - goobyx < certain number?
@@ -337,11 +337,6 @@ const drawEnemy = obj => {
 }
 
 const drawMap = level => {//Draws the canvas
-    /*for(let i = 0; i < level.length; i++){
-        for(let j = 0; j < level[i].length; j++){
-            ctx.drawImage(bitMap, level[i][j]*8, 0, 8, 8, j*8, i*8, 8, 8);
-        } 
-    }*/
     level.forEach((element, i)=> {
         element.forEach((secondElement, j)=>{
             ctx.drawImage(bitMap, secondElement*8, 0, 8, 8, j*8, i*8, 8, 8);
@@ -509,13 +504,13 @@ const drawGooby = () => {
 
     }if(rightPressed){
         if(currentAnimation === 0){
-            ctx.drawImage(jumper, 0, 0, 8, 8, goobyX, goobyY, 6, 6);
+            ctx.drawImage(updatedRight, 202, 0, 50, 40, goobyX, goobyY, 8, 8);
 
         }else if(currentAnimation === 1){
-            ctx.drawImage(jumper, 0, 0, 8, 8, goobyX, goobyY, 6, 6);
+            ctx.drawImage(updatedRight, 136, 0, 50, 40, goobyX, goobyY, 8, 8);
 
         }else if( currentAnimation === 2){
-            ctx.drawImage(jumper, 0, 0, 8, 8, goobyX, goobyY, 6, 6);
+            ctx.drawImage(updatedRight, 74, 0, 50, 40, goobyX, goobyY, 8, 8);
 
             
         }
@@ -529,11 +524,11 @@ const drawGooby = () => {
 
     }if(leftPressed){
         if(currentAnimation === 0){
-            ctx.drawImage(jumper, 8, 0, 8, 8, goobyX, goobyY, 6, 6);
+            ctx.drawImage(updated, 0, 0, 50, 40, goobyX, goobyY, 8, 8);
         }else if(currentAnimation === 1){
-            ctx.drawImage(jumper, 8, 0, 8, 8, goobyX, goobyY, 6, 6);
+            ctx.drawImage(updated, 62, 0, 50, 40, goobyX, goobyY, 8, 8);
         }else if( currentAnimation === 2){
-            ctx.drawImage(jumper, 8, 0, 8, 8, goobyX, goobyY, 6, 6);
+            ctx.drawImage(updated, 128, 0, 50, 40, goobyX, goobyY, 8, 8);
             
         }
         if(animationCounter >= 12){
@@ -546,20 +541,20 @@ const drawGooby = () => {
     }if(currentAnimation === 3){
         switch(lastButtonPressed){
             case "right":
-            ctx.drawImage(jumper, 0, 0, 8, 8, goobyX, goobyY, 6, 6);
+                ctx.drawImage(updatedRight, 200, 42, 50, 40, goobyX+1, goobyY, 8, 8);
             break;
             case "left":
-                ctx.drawImage(jumper, 8, 0, 8, 8, goobyX, goobyY, 6, 6);
+                ctx.drawImage(updated, 0, 42, 50, 40, goobyX, goobyY, 8, 8);
                 break;
         }   
 
     }else if(!rightPressed && !leftPressed) {
         switch(lastButtonPressed){
             case "right":
-            ctx.drawImage(jumper, 0, 0, 8, 8, goobyX+1, goobyY, 6, 6);
+            ctx.drawImage(updatedRight, 200, 0, 50, 40, goobyX+1, goobyY, 8, 8);
             break;
             case "left":
-                ctx.drawImage(jumper, 8, 0, 8, 8, goobyX, goobyY, 6, 6);
+                ctx.drawImage(updated, 0, 0, 50, 40, goobyX, goobyY, 8, 8);
                 break;
         }
     }
@@ -595,10 +590,11 @@ const keyDownHandler = e => {
         canJump = false;
         airBourne = true;
         spaceBarPressed = true;
-        currentAnimation = 3;
+       
 
     }else if(e.keyCode === 16){//leftshift
         shiftPressed = true;
+        currentAnimation = 3
     }
 }
 
