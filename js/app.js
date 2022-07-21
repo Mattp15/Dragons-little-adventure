@@ -1,7 +1,7 @@
 const canvas = document.getElementById("myCanvas");
 document.body.style.backgroundColor = "rgba(0, 0, 0, 0.9)";
 let ctx = canvas.getContext("2d");
-document.body.style.zoom = "575%";
+document.body.style.zoom = "525%";
 let fps = 60;
 const background = new Image();
 background.src = "images/background.png"
