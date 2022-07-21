@@ -86,7 +86,7 @@ class Enemy extends DefaultObject{
         this.expValue = 1;
         this.enemy = true;
         this.text = false;
-        this.coolDown = 15;
+        this.coolDown = 60;
     }
     movementGenerator() {
         setInterval(() => {
@@ -196,30 +196,60 @@ gameMaps.push(bundle);
 const tileSet2 = [
     [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
     [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 9],
+    [1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 9],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+    [1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 9],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 9],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 9],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
-    [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
-    [1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+    [1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 9],
+    [1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 9],
+    [1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
+    [1, 0, 0, 0, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 9],
+    [1, 2, 2, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 9],
+    [1, 0, 2, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 9],
+    [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 9],
+    [1, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 9],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9]]
 const objectsTileSet2 = [];
-tempObject = new Enemy(140, 120, 8, 8, "cannon", 2, 112, 32);
+tempObject = new Enemy(120, 116, 8, 8, "cannon", 1, 112, 32);
+tempObject.health = 100000;
+tempObject.previousDirection = 'right'
+objectsTileSet2.push(tempObject);
+tempObject = new Enemy(120, 124, 8, 8, "cannon", 1, 112, 32);
+tempObject.health = 100000;
+tempObject.previousDirection = 'right'
+objectsTileSet2.push(tempObject);
+tempObject = new Enemy(120, 130, 8, 8, "cannon", 1, 112, 32);
+tempObject.health = 100000;
+tempObject.previousDirection = 'right'
+objectsTileSet2.push(tempObject);
+tempObject = new Enemy(120, 138, 8, 8, "cannon", 1, 112, 32);
+tempObject.health = 100000;
+tempObject.previousDirection = 'right'
+objectsTileSet2.push(tempObject);
+tempObject = new Enemy(80, 82, 8, 8, "cannon", 1, 112, 32);
+tempObject.health = 100000;
+tempObject.previousDirection = 'right'
+objectsTileSet2.push(tempObject);
+tempObject = new Enemy(150, 100, 8, 8, "cannon", 1, 112, 32);
 tempObject.health = 100000;
 tempObject.previousDirection = 'left'
 objectsTileSet2.push(tempObject);
-tempObject = new Zone(9, 140, 8, 8, 1, 112, 32);
+tempObject = new Enemy(150, 65, 8, 8, "cannon", 1, 112, 32);
+tempObject.health = 100000;
+tempObject.previousDirection = 'left'
+objectsTileSet2.push(tempObject);
+tempObject = new Enemy(10, 34, 8, 8, "cannon", 1, 112, 32);
+tempObject.health = 100000;
+tempObject.previousDirection = 'right'
+objectsTileSet2.push(tempObject);
+tempObject = new Zone(9, 144, 8, 8, 1, 112, 32);
+objectsTileSet2.push(tempObject);
+tempObject = new Zone(8, 120, 8, 8, 2, 12, 12);
 objectsTileSet2.push(tempObject);
 tempObject = new Text(105, 10, 0, 0, 'LEVEL: 2');
 objectsTileSet2.push(tempObject);
@@ -229,6 +259,41 @@ bundle = new MapBundler(objectsTileSet2, tileSet2);
 gameMaps.push(bundle);
 
 
+
+/////////zone3 bossfight
+const tileSet3 = [
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
+    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
+    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
+    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
+    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
+    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
+    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
+    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
+    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
+    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
+    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
+    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
+    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
+    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
+    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
+    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
+    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9]]
+const objectsTileSet3 = [];
+tempObject = new Enemy(80, 80, 8, 8, "BOSS", 0.1, 9, 140, 1);
+objectsTileSet3.push(tempObject);
+
+
+tempObject = new Text(86, 10, 0, 0, 'FINAL BOSS');
+objectsTileSet3.push(tempObject);
+tempObject = new Text(86, 10, 0, 0, 'FINAL BOSS');
+objectsTileSet3.push(tempObject);
+
+bundle = new MapBundler(objectsTileSet3, tileSet3);
+gameMaps.push(bundle);
 
 
 //sets starting zone
@@ -323,10 +388,26 @@ const drawEnemy = obj => {
                         fireBall.onHitLocationX = obj[i].onHitLocationX;
                         fireBall.onHitLocationY = obj[i].onHitLocationY;
                         enemyProj.push(fireBall);
-                        obj[i].coolDown = 30;
+                        obj[i].coolDown = 60;
+                    }
+                }if(obj[i].previousDirection === 'right'){
+                    console.log('right')
+                    obj[i].coolDown--;
+                    ctx.drawImage(jumper, 24, 8, 8, 8, obj[i].x, obj[i].y, 8, 8);
+                    if(obj[i].coolDown < 0){            
+                        let fireBall = new Projectile(obj[i].x + 10, obj[i].y - 4, 8, 8, 2, obj[i].previousDirection, 'cannon');
+                        fireBall.onHitLocationX = obj[i].onHitLocationX;
+                        fireBall.onHitLocationY = obj[i].onHitLocationY;
+                        enemyProj.push(fireBall);
+                        obj[i].coolDown = 60;
                     }
                 }
+
+            }if(obj[i].mobType === 'BOSS'){
+                console.log("inboss")
+                ctx.drawImage(updated, 64, 80, 64, 64, obj[i].x, obj[i].y, 64, 64);
             }
+
     }
         if(gameObjects[i].isText){
                 ctx.fillStyle = "white";
@@ -359,26 +440,27 @@ const drawProjectiles = (obj) => {//Draws Player Projectiles
         }if(collision(obj[i].x, obj[i].y, map) || projectileCollision(obj[i]) || obj[i].distance >= goobyRange){
             obj.shift();
                     
-        }             
+        }            
     }    
 }   
 
 const enemyProjectileDrawing= (obj) => {//Draws Enemies Projectiles
     for(let i = 0; i < obj.length; i++){
         if(obj[i].direction === 'right' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){
-            obj[i].x+=obj[i].projSpeed;
-            ctx.drawImage(jumper, 40, 0, 8, 8, obj[i].x, obj[i].y + 4, 8, 8);
+            obj[i].x+=obj[i].projSpeed/4;
+            ctx.drawImage(jumper, 32, 0, 8, 8, obj[i].x, obj[i].y + 4, 8, 8);   
 
         }if(obj[i].direction === 'left' && !collision(obj[i].x, obj[i].y, map) && !projectileCollision(obj[i])){
-            obj[i].x -= obj[i].projSpeed;
+            obj[i].x -= obj[i].projSpeed/4;
             ctx.drawImage(jumper, 32, 0, 8, 8, obj[i].x, obj[i].y + 4, 8, 8);
 
-        }if(obj[i].x>= goobyX && obj[i].x<= goobyX + 4  && obj[i].y >= goobyY - 12 && obj[i].y <= goobyY + 4){
+        }if(obj[i].x>= goobyX && obj[i].x<= goobyX + 4  && obj[i].y >= goobyY -4  && obj[i].y <= goobyY){
             goobyX = obj[i].onHitLocationX;
             goobyY = obj[i].onHitLocationY;
             obj.shift();
             playerHealth --;
         }
+        
     }
 } 
 
@@ -438,19 +520,8 @@ const drawGooby = () => {
     animationCounter++;
     cdTimer++;
     //Attack animation
-    if(shiftPressed && cdTimer > cdDefault-buffs){
-        if(fireDirection === 'up'){
-        let fireBall = new Projectile(goobyX, goobyY, 8, 8, 2, 'up', 'gooby');
-        projectiles.push(fireBall);
-        shiftPressed = false;
-       
-        
-        }else if(fireDirection === 'down'){
-        let fireBall = new Projectile(goobyX, goobyY, 8, 8, 2, 'down', 'gooby');
-        projectiles.push(fireBall);
-        shiftPressed = false;
-        
-        }else if(fireDirection === 'right'){
+    if(shiftPressed && cdTimer > cdDefault-buffs){    
+        if(fireDirection === 'right'){
             let fireBall = new Projectile(goobyX, goobyY-4, 8, 8, 2, 'right', 'gooby');
             projectiles.push(fireBall);
             shiftPressed = false;
@@ -474,37 +545,31 @@ const drawGooby = () => {
             airBourne = false;
         }, 350);//Jumping time in air
     
-    }if(!collision(goobyX, goobyY+1, map)){
+    }if(!collision(goobyX, goobyY+2, map)){
         canJump = false;
 
-    }if(collision(goobyX, goobyY + 2.2, map) && !canJump){
+    }if(collision(goobyX, goobyY + 3, map) && !canJump){
         goobyY-=1.5;
         canJump = true;
         airBourne = false;
         currentAnimation = 0;
 
-    }if(!airBourne && !collision(goobyX, goobyY + 1, map)){//Falling
+    }if(!airBourne && !collision(goobyX, goobyY + 2, map)){//Falling
         goobyY += jump * 1.5;
 
     }if(rightPressed){
         if(!collision(goobyX + 2, goobyY, map)){
         goobyX += walk;
-
-        }if(airBourne && collision(goobyX + 1, goobyY, map)){
-            goobyY += walk * 0.75;//Reduces fallspeed/jumpspeed when pressing into walls
         }
 
     }if(leftPressed){
         if(!collision(goobyX - 1, goobyY, map)){
             goobyX -= walk;
-            
-        }if(airBourne && collision(goobyX - 1, goobyY, map)){
-            goobyY += walk * 0.75;//Reduces fallspeed/jumpspeed when pressing into walls
         }
 
     }if(rightPressed){
         if(currentAnimation === 0){
-            ctx.drawImage(updatedRight, 202, 0, 50, 40, goobyX, goobyY, 8, 8);
+            ctx.drawImage(updatedRight, 200, 0, 62, 42, goobyX, goobyY, 8, 8);
 
         }else if(currentAnimation === 1){
             ctx.drawImage(updatedRight, 136, 0, 50, 40, goobyX, goobyY, 8, 8);
