@@ -1,7 +1,7 @@
 const canvas = document.getElementById("myCanvas");
 document.body.style.backgroundColor = "rgba(0, 0, 0, 0.9)";
 let ctx = canvas.getContext("2d");
-document.body.style.zoom = "525%";
+document.body.style.zoom = "450%";
 let fps = 60;
 const background = new Image();
 background.src = "images/background.png"
@@ -46,11 +46,7 @@ let isStunned = false;
 let healthX = 0;
 let healthY = 8;
 let playerHealth = 3;
-const BGM = new Audio();
-BGM.src = "sounds/BGM.mp3";
-const playBGM = () =>{
-    BGM.play();
-}
+
 
 class DefaultObject {
     constructor(x, y, width, height){
@@ -138,8 +134,8 @@ let playerText = new Text(0, 10, 0, 0, `LIVESx ${playerHealth}`);
 const tileSet1 = [
     [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
     [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 9],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 9],
+    [1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 9],
+    [1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 9],
     [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 9],
     [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 9],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 9],
@@ -284,14 +280,21 @@ const tileSet3 = [
     [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
     [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9]]
 const objectsTileSet3 = [];
-tempObject = new Enemy(90, 90, 8, 8, "BOSS", 0.1, 9, 140, 1);
-tempObject.previousDirection = 'left';
+tempObject = new Enemy(90, 90, 8, 8, "BONUS", 0.1, 9, 140, 1);
+objectsTileSet3.push(tempObject);
+tempObject = new Enemy(8, 40, 8, 8, "BONUS1", 0.1, 9, 140, 1);
+objectsTileSet3.push(tempObject);
+tempObject = new Enemy(60, 40, 8, 8, "BONUS2", 0.1, 9, 140, 1);
+objectsTileSet3.push(tempObject);
+tempObject = new Enemy(8, 90, 8, 8, "BONUS3", 0.1, 9, 140, 1);
+objectsTileSet3.push(tempObject);
+tempObject = new Enemy(104, 40, 8, 8, "BONUS4", 0.1, 9, 140, 1);
 objectsTileSet3.push(tempObject);
 
 
-tempObject = new Text(86, 10, 0, 0, 'FINAL BOSS');
+tempObject = new Text(40, 40, 0, 0, 'BONUS ART');
 objectsTileSet3.push(tempObject);
-tempObject = new Text(86, 10, 0, 0, 'FINAL BOSS');
+tempObject = new Text(40, 10, 0, 0, 'BONUS ART');
 objectsTileSet3.push(tempObject);
 
 bundle = new MapBundler(objectsTileSet3, tileSet3);
@@ -299,8 +302,8 @@ gameMaps.push(bundle);
 
 
 //sets starting zone
-let map = gameMaps[0].map;
-gameObjects = gameMaps[0].gameObject;
+let map = gameMaps[2].map;
+gameObjects = gameMaps[2].gameObject;
 
 //consider something to create an agro radius, something like monsterx - goobyx < certain number?
 //consider the logic from before, if obj[i].x > goobyX then obj[i].x - speed. Lets try to get some sort of timing to prevent a hard b-line for player on dumber mobs-possible extension goal
@@ -404,20 +407,18 @@ const drawEnemy = obj => {
                     }
                 }
 
-            }if(obj[i].mobType === 'BOSS'){
-                 
-                    console.log('fire')          
-                    let fireBall = new Projectile(obj[i].x - 10, obj[i].y - 10, 8, 8, 2, obj[i].previousDirection, 'cannon');
-                    fireBall.onHitLocationX = obj[i].onHitLocationX;
-                    fireBall.onHitLocationY = obj[i].onHitLocationY;
-                    enemyProj.push(fireBall);
-                    
-                
-                
-                ctx.drawImage(updatedRight, 130, 78, 64, 64, obj[i].x, obj[i].y, 64, 64);
+            }if(obj[i].mobType === 'BONUS'){
+    
+                ctx.drawImage(updatedRight, 130, 78, 64, 64, obj[i].x, obj[i].y, 64, 64);             
 
-                
-
+            }if(obj[i].mobType === 'BONUS1'){
+                ctx.drawImage(updated, 0, 0, 52, 40, obj[i].x, obj[i].y, 52, 40);
+            }if(obj[i].mobType === 'BONUS2'){
+                ctx.drawImage(updated, 64, 0, 52, 40, obj[i].x, obj[i].y, 52, 40);
+            }if(obj[i].mobType === 'BONUS3'){
+                ctx.drawImage(updated, 128, 0, 52, 40, obj[i].x, obj[i].y, 52, 40);
+            }if(obj[i].mobType === 'BONUS4'){
+                ctx.drawImage(updated, 0, 42, 52, 40, obj[i].x, obj[i].y, 52, 40);
             }
 
     }
@@ -580,13 +581,13 @@ const drawGooby = () => {
 
     }if(rightPressed){
         if(currentAnimation === 0){
-            ctx.drawImage(updatedRight, 200, 0, 62, 42, goobyX, goobyY, 8, 8);
+            ctx.drawImage(updatedRight, 200, 0, 62, 42, goobyX-2, goobyY, 8, 8);
 
         }else if(currentAnimation === 1){
-            ctx.drawImage(updatedRight, 136, 0, 50, 40, goobyX, goobyY, 8, 8);
+            ctx.drawImage(updatedRight, 136, 0, 50, 40, goobyX-2, goobyY, 8, 8);
 
         }else if( currentAnimation === 2){
-            ctx.drawImage(updatedRight, 74, 0, 50, 40, goobyX, goobyY, 8, 8);
+            ctx.drawImage(updatedRight, 74, 0, 50, 40, goobyX-2, goobyY, 8, 8);
 
             
         }
@@ -627,7 +628,7 @@ const drawGooby = () => {
     }else if(!rightPressed && !leftPressed) {
         switch(lastButtonPressed){
             case "right":
-            ctx.drawImage(updatedRight, 200, 0, 50, 40, goobyX+1, goobyY, 8, 8);
+            ctx.drawImage(updatedRight, 200, 0, 50, 40, goobyX-1, goobyY, 8, 8);
             break;
             case "left":
                 ctx.drawImage(updated, 0, 0, 50, 40, goobyX, goobyY, 8, 8);
@@ -653,7 +654,6 @@ const keyDownHandler = e => {
         rightPressed = true;
         fireDirection = 'right'
         lastButtonPressed = "right";
-        playBGM();
 
     }else if(e.keyCode === 87){//up
         upPressed = true;
@@ -775,7 +775,6 @@ const draw = () => {
     requestAnimationFrame(draw);
     },1000 / fps);
 }
-playBGM();
 draw();
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
