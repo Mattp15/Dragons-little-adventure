@@ -653,6 +653,7 @@ const keyDownHandler = e => {
         rightPressed = true;
         fireDirection = 'right'
         lastButtonPressed = "right";
+        playBGM();
 
     }else if(e.keyCode === 87){//up
         upPressed = true;
@@ -685,6 +686,7 @@ const keyUpHandler = e => {
     }else if(e.keyCode === 68){//right
         rightPressed = false;
         currentAnimation = 0;
+        
         
     }else if(e.keyCode === 87){//up
         upPressed = false; 
