@@ -302,8 +302,8 @@ gameMaps.push(bundle);
 
 
 //sets starting zone
-let map = gameMaps[2].map;
-gameObjects = gameMaps[2].gameObject;
+let map = gameMaps[0].map;
+gameObjects = gameMaps[0].gameObject;
 
 //consider something to create an agro radius, something like monsterx - goobyx < certain number?
 //consider the logic from before, if obj[i].x > goobyX then obj[i].x - speed. Lets try to get some sort of timing to prevent a hard b-line for player on dumber mobs-possible extension goal
