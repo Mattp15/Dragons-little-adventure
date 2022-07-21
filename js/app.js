@@ -13,9 +13,6 @@ const updatedRight = new Image();
 updatedRight.src = "images/bitmapDragonRight.png";
 const updated = new Image();
 updated.src = "images/bitmapDragon.png";
-
-
-
 const jumper = new Image();
 jumper.src = "images/newchar.png";
 let rightPressed = false;
@@ -49,7 +46,11 @@ let isStunned = false;
 let healthX = 0;
 let healthY = 8;
 let playerHealth = 3;
-
+const BGM = new Audio();
+BGM.src = "sounds/BGM.mp3";
+const playBGM = () =>{
+    BGM.play();
+}
 
 class DefaultObject {
     constructor(x, y, width, height){
@@ -283,7 +284,8 @@ const tileSet3 = [
     [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
     [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9]]
 const objectsTileSet3 = [];
-tempObject = new Enemy(80, 80, 8, 8, "BOSS", 0.1, 9, 140, 1);
+tempObject = new Enemy(90, 90, 8, 8, "BOSS", 0.1, 9, 140, 1);
+tempObject.previousDirection = 'left';
 objectsTileSet3.push(tempObject);
 
 
@@ -299,7 +301,6 @@ gameMaps.push(bundle);
 //sets starting zone
 let map = gameMaps[0].map;
 gameObjects = gameMaps[0].gameObject;
-console.log(gameObjects);
 
 //consider something to create an agro radius, something like monsterx - goobyx < certain number?
 //consider the logic from before, if obj[i].x > goobyX then obj[i].x - speed. Lets try to get some sort of timing to prevent a hard b-line for player on dumber mobs-possible extension goal
@@ -404,8 +405,19 @@ const drawEnemy = obj => {
                 }
 
             }if(obj[i].mobType === 'BOSS'){
-                console.log("inboss")
-                ctx.drawImage(updated, 64, 80, 64, 64, obj[i].x, obj[i].y, 64, 64);
+                 
+                    console.log('fire')          
+                    let fireBall = new Projectile(obj[i].x - 10, obj[i].y - 10, 8, 8, 2, obj[i].previousDirection, 'cannon');
+                    fireBall.onHitLocationX = obj[i].onHitLocationX;
+                    fireBall.onHitLocationY = obj[i].onHitLocationY;
+                    enemyProj.push(fireBall);
+                    
+                
+                
+                ctx.drawImage(updatedRight, 130, 78, 64, 64, obj[i].x, obj[i].y, 64, 64);
+
+                
+
             }
 
     }
@@ -533,7 +545,6 @@ const drawGooby = () => {
 
         }   
         cdTimer = 0;
-        console.log(fireDirection)
     }if(collision(goobyX, goobyY - 1.5, map)){
         airBourne = false;
         
@@ -552,7 +563,7 @@ const drawGooby = () => {
         goobyY-=1.5;
         canJump = true;
         airBourne = false;
-        currentAnimation = 0;
+    
 
     }if(!airBourne && !collision(goobyX, goobyY + 2, map)){//Falling
         goobyY += jump * 1.5;
@@ -660,7 +671,10 @@ const keyDownHandler = e => {
     }else if(e.keyCode === 16){//leftshift
         shiftPressed = true;
         currentAnimation = 3
-    }
+        setTimeout(() => {
+            currentAnimation = 0;
+        }, 300)
+    } 
 }
 
 const keyUpHandler = e => {
@@ -759,6 +773,7 @@ const draw = () => {
     requestAnimationFrame(draw);
     },1000 / fps);
 }
+playBGM();
 draw();
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
