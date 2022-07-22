@@ -46,6 +46,10 @@ let isStunned = false;
 let healthX = 0;
 let healthY = 8;
 let playerHealth = 3;
+let spray = 0;
+setInterval(() => {
+    spray = -spray;
+}, 50);
 
 
 class DefaultObject {
@@ -328,6 +332,8 @@ const startScreen = [
     [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
     [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9]]
 const startScreenObjects = [];
+tempObject = new Enemy(60, 100, 8, 8, "startScreen", 0.1, 9, 140, 1000000000);
+startScreenObjects.push(tempObject);
 tempObject = new Text(1, 24, 0, 0, 'GUIDE THE LITTLE DRAGON');
 startScreenObjects.push(tempObject);
 tempObject = new Text(1, 36, 0, 0, 'PAST OBSTACLES');
@@ -472,8 +478,28 @@ const drawEnemy = obj => {
             }if(obj[i].mobType === 'BONUS4'){
                 ctx.drawImage(updated, 0, 42, 52, 40, obj[i].x, obj[i].y, 52, 40);
             }
+            if(obj[i].mobType === 'startScreen'){
+                obj[i].coolDown--;
+                if(!obj[i].currentAnimation){
+                    ctx.drawImage(updated, 0, 0, 50, 40, obj[i].x, obj[i].y, 64, 64);
 
-    }
+                }else if(obj[i].currentAnimation === 1 && obj[i].coolDown < 0){
+                    spray++;
+                    ctx.drawImage(updated, 0, 40, 56, 40, obj[i].x, obj[i].y, 64, 64);
+                    let fireBall = new Projectile(obj[i].x-5, obj[i].y +20 +spray, 8, 8, 2, 'left', 'gooby');
+                    projectiles.push(fireBall);
+
+                }if(obj[i].animationCounter >= 6){
+                    obj[i].currentAnimation++;
+                    obj[i].animationCounter = 0;
+                        if(obj[i].currentAnimation > 1){
+                            obj[i].currentAnimation = 0;
+                        }
+                }
+            }
+        }
+
+    
         if(gameObjects[i].isText){
                 ctx.fillStyle = "white";
                 ctx.font = "10px Sans-Serif";
@@ -547,6 +573,7 @@ const projectileCollision = (projectile) => {
 const objectCollision = () => {
 let playerIndex = gameObjects.indexOf(playerText)
 gameObjects.splice(playerIndex, 1)
+
     if(!gameObjects.includes(playerText) && playerHealth > 0){
         gameObjects.push(playerText = new Text(1, 10, 0, 0, `LIVESx ${playerHealth}`));
     }
@@ -770,7 +797,7 @@ const isDead = () => {
 const collision = (x, y, map) => {
     for(let i = 0; i < map.length; i++){
         for(let j = 0; j < map[i].length; j++){                    
-            if(map[i][j] != 0 && map[i][j] != 2){                  
+            if(map[i][j] != 0 && map[i][j] != 2 && map[i][j] != 9){                  
                  if(x <= j*8+6 && x >= j*8-4 && y <= i*8+4 && y >= i*8-4){
                     return true;
                 }
