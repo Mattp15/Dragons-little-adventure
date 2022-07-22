@@ -22,8 +22,8 @@ let upPressed = false;
 let lastButtonPressed = 'right';
 let spaceBarPressed = false;
 let shiftPressed = false;
-let goobyX = 9;
-let goobyY = 140;
+let goobyX = -100;
+let goobyY = 0;
 let currentAnimation = 0;
 let animationCounter = 0;
 let cdTimer = 0;
@@ -126,9 +126,13 @@ class MapBundler{
     this.gameObject = o;
     this.map = m;
     }
+}let playerText = new Text(0, 10, 0, 0, ``);
+const startTheGame = () => {
+    map = gameMaps[0].map;
+    gameObjects = gameMaps[0].gameObject;
+    goobyX = 9;
+    goobyY = 140;
 }
-
-let playerText = new Text(0, 10, 0, 0, `LIVESx ${playerHealth}`);
 
 ////////////////////////////////////////////////////////////////zone1 20 rows, 25 collumns
 const tileSet1 = [
@@ -246,7 +250,7 @@ tempObject.previousDirection = 'right'
 objectsTileSet2.push(tempObject);
 tempObject = new Zone(9, 144, 8, 8, 1, 112, 32);
 objectsTileSet2.push(tempObject);
-tempObject = new Zone(8, 120, 8, 8, 2, 12, 12);
+tempObject = new Zone(8, 120, 8, 8, 2, -100, 0);
 objectsTileSet2.push(tempObject);
 tempObject = new Text(105, 10, 0, 0, 'LEVEL: 2');
 objectsTileSet2.push(tempObject);
@@ -257,28 +261,28 @@ gameMaps.push(bundle);
 
 
 
-/////////zone3 bossfight
-const tileSet3 = [
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
-    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
-    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
-    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
-    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
-    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
-    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
-    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
-    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
-    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
-    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
-    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
-    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
-    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
-    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
-    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
-    [9, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9]]
+/////////zone3 bonus
+const tileSet3 = [ 
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9]]
 const objectsTileSet3 = [];
 tempObject = new Enemy(90, 90, 8, 8, "BONUS", 0.1, 9, 140, 1);
 objectsTileSet3.push(tempObject);
@@ -301,10 +305,58 @@ bundle = new MapBundler(objectsTileSet3, tileSet3);
 gameMaps.push(bundle);
 
 
-//sets starting zone
-let map = gameMaps[0].map;
-gameObjects = gameMaps[0].gameObject;
+/////////////start screen
+const startScreen = [ 
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9]]
+const startScreenObjects = [];
+tempObject = new Text(1, 24, 0, 0, 'GUIDE THE LITTLE DRAGON');
+startScreenObjects.push(tempObject);
+tempObject = new Text(1, 36, 0, 0, 'PAST OBSTACLES');
+startScreenObjects.push(tempObject);
+tempObject = new Text(1, 48, 0, 0, 'BE CAUTIOUS OF TRICKS!');
+startScreenObjects.push(tempObject);
+tempObject = new Text(1, 60, 0, 0, 'THE BLACK PORTALS WILL TAKE');
+startScreenObjects.push(tempObject);
+tempObject = new Text(1, 72, 0, 0, 'YOU TO TH ENEXT LEVEL');
+startScreenObjects.push(tempObject);
+tempObject = new Text(1, 84, 0, 0, 'MOVE WITH A AND D,');
+startScreenObjects.push(tempObject);
+tempObject = new Text(1, 96, 0, 0, 'SPACEBAR TO JUMP');
+startScreenObjects.push(tempObject);
+tempObject = new Text(1, 108, 0, 0, 'SHIFT TO SHOOT FIREBALLS!');
+startScreenObjects.push(tempObject);
+tempObject = new Text(1, 136, 0, 0, 'PRESS P TO BEGIN THE TRAIL');
+startScreenObjects.push(tempObject);
+tempObject = new Text(1, 136, 0, 0, 'PRESS P TO BEGIN THE TRAIL');
+startScreenObjects.push(tempObject);
 
+
+bundle = new MapBundler(startScreenObjects, startScreen);
+gameMaps.push(bundle);
+//sets starting zone
+let map = gameMaps[3].map;
+gameObjects = gameMaps[3].gameObject;
+
+console.log(map);
 //consider something to create an agro radius, something like monsterx - goobyx < certain number?
 //consider the logic from before, if obj[i].x > goobyX then obj[i].x - speed. Lets try to get some sort of timing to prevent a hard b-line for player on dumber mobs-possible extension goal
 
@@ -336,7 +388,7 @@ const drawEnemy = obj => {
                     break;
 
                 }if(!obj[i].currentAnimation){
-                    ctx.drawImage(bitMap, 25, 0, 8, 8, obj[i].x, obj[i].y, 8, 8);
+                    ctx.drawImage(bitMap, 25, 0, 7, 8, obj[i].x, obj[i].y, 8, 8);
 
                 }else if(obj[i].currentAnimation === 1){
                     ctx.drawImage(bitMap, 32, 0, 8, 7, obj[i].x, obj[i].y, 8, 8);
@@ -424,7 +476,7 @@ const drawEnemy = obj => {
     }
         if(gameObjects[i].isText){
                 ctx.fillStyle = "white";
-                ctx.font = "12px Arial";
+                ctx.font = "10px Sans-Serif";
                 ctx.fillText(gameObjects[i].line, gameObjects[i].x, gameObjects[i].y)
         }      
     }
@@ -496,7 +548,7 @@ const objectCollision = () => {
 let playerIndex = gameObjects.indexOf(playerText)
 gameObjects.splice(playerIndex, 1)
     if(!gameObjects.includes(playerText) && playerHealth > 0){
-        gameObjects.push(playerText = new Text(0, 10, 0, 0, `LIVESx ${playerHealth}`));
+        gameObjects.push(playerText = new Text(1, 10, 0, 0, `LIVESx ${playerHealth}`));
     }
     for(let k = 0; k < gameObjects.length; k++){             
         if(goobyX >= gameObjects[k].x - 4 && goobyX <= gameObjects[k].x + 4 && goobyY >= gameObjects[k].y -4 && goobyY <= gameObjects[k].y + 4 && gameObjects[k].health > 0){
@@ -675,7 +727,13 @@ const keyDownHandler = e => {
         setTimeout(() => {
             currentAnimation = 0;
         }, 300)
-    } 
+    }else if(e.keyCode === 80){//P
+        if(goobyX === -100){
+            setTimeout(()=>{
+        startTheGame();
+    }, 150)
+        }
+    }
 }
 
 const keyUpHandler = e => {
@@ -778,26 +836,5 @@ const draw = () => {
 draw();
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
-/*blank level template
-[ 
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-    [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9]]
-    */
+
+
