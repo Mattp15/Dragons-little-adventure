@@ -112,18 +112,7 @@ class Zone extends DefaultObject{
         this.isZone = true;
     }
 }
-class Trigger extends DefaultObject{
-    constructor(x, y, width, height, triggerType){
-        super(x, y, width, height);
-        this.trigerType = triggerType;
-        this.isTrigger = true;
-    }
-    monsterSummon(){
-        tempObject = new Enemy(56, 24, 8, 8, this.triggerType, 0.1, 1);
-        tempObject.movementGenerator();
-        gameObjects.push(tempObject);
-    }
-}
+
 
 class MapBundler{
     constructor(o, m){
@@ -350,9 +339,9 @@ tempObject = new Text(1, 96, 0, 0, 'SPACEBAR TO JUMP');
 startScreenObjects.push(tempObject);
 tempObject = new Text(1, 108, 0, 0, 'SHIFT TO SHOOT FIREBALLS!');
 startScreenObjects.push(tempObject);
-tempObject = new Text(1, 136, 0, 0, 'PRESS P TO BEGIN THE TRIAL');
+tempObject = new Text(1, 136, 0, 0, 'PRESS P TO BEGIN THE TRAIL');
 startScreenObjects.push(tempObject);
-tempObject = new Text(1, 136, 0, 0, 'PRESS P TO BEGIN THE TRIAL');
+tempObject = new Text(1, 136, 0, 0, 'PRESS P TO BEGIN THE TRAIL');
 startScreenObjects.push(tempObject);
 
 
