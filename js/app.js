@@ -350,9 +350,9 @@ tempObject = new Text(1, 96, 0, 0, 'SPACEBAR TO JUMP');
 startScreenObjects.push(tempObject);
 tempObject = new Text(1, 108, 0, 0, 'SHIFT TO SHOOT FIREBALLS!');
 startScreenObjects.push(tempObject);
-tempObject = new Text(1, 136, 0, 0, 'PRESS P TO BEGIN THE TRAIL');
+tempObject = new Text(1, 136, 0, 0, 'PRESS P TO BEGIN THE TRIAL');
 startScreenObjects.push(tempObject);
-tempObject = new Text(1, 136, 0, 0, 'PRESS P TO BEGIN THE TRAIL');
+tempObject = new Text(1, 136, 0, 0, 'PRESS P TO BEGIN THE TRIAL');
 startScreenObjects.push(tempObject);
 
 
