@@ -58,35 +58,6 @@ class DefaultObject {
         this.y = y;
         this.width = width;
         this.height = height;
-        this.lives = 3;
-        this.projectiles = [];
-    }
-    collision() {
-        for(let i of globalMap){
-            for(let j of i){
-                if(globalMap[i][j] !=0 && globalMap[i][j] != 2){
-                    if(this.x >= j*8-4 && this.x <= j*8+6 && this.y >= i*8+4 && this.y <= i*8+4){
-                    return true;
-                    }
-                }
-            }
-        }
-    return false;
-    }
-
-    movement() {
-        //set up movement conditionals - might have to make seperate ones for npc/player
-    }
-    displayLives() {
-        //drawimage lives info
-    }
-
-    makeProjectile() {
-        //call the projectile class and push into this.projectiles
-    }
-
-    drawProjectiles() {
-        //draw the projectiles of this.projectiles while !collision
     }
 }
 class Projectile extends DefaultObject{
